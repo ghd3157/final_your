@@ -129,15 +129,15 @@
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <!--<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">장바구니 담기</a></div> -->
-                                <button type="button" id="openmodal${i.count}" class="btn btn-outline-dark mt-auto" onclick="openCartAdd(${i.count})">장바구니 담기</button>
-					  			<div class="modal${i.count} hidden">
-					    		<div class="modal__overlay${i.count}">
-					    		<div class="modal__content${i.count}">
-					    		<div>${market.title}</div>
-					    		<div><fmt:formatNumber value="${market.price}" pattern="#,###,###"/>원</div>
-					     		<button type="button" id="close${i.count}">닫기</button>
-    							</div>
-    							</div>
+                                <button type="button" class="btntt">장바구니 담기</button>
+					  			<div class="modal">
+						    		<div class="modal__overlay">
+							    		<div class="modal__content">
+								    		<div>${market.title}</div>
+								    		<div><fmt:formatNumber value="${market.price}" pattern="#,###,###"/>원</div>
+								     		<button type="button" class="close">닫기</button>
+		    							</div>
+	    							</div>
  			 					</div>
                             </div>
                         </div>
@@ -167,7 +167,16 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">장바구니 담기</a></div>
+                            	<button type="button" class="btntt">장바구니 담기</button>
+					  			<div class="modal">
+						    		<div class="modal__overlay">
+							    		<div class="modal__content">
+								    		<div>${best.title}</div>
+								    		<div><fmt:formatNumber value="${best.price}" pattern="#,###,###"/>원</div>
+								     		<button type="button" class="close">닫기</button>
+		    							</div>
+	    							</div>
+ 			 					</div>
                             </div>
                         </div>
                     </div>
@@ -193,42 +202,48 @@
         <script src="js/scripts.js"></script>
         
         <!-- 모달창 -->
-		<script>
-		function openCartAdd(data) {
+		<script type="text/javascript">
 			
-			var num = data;
-			alert(num);
+			// Modal을 가져온다
+			var modals = document.getElementsByClassName("modal");
+			// Modal을 띄우는 클래스 이름을 가져온다.
+			var btns = document.getElementsByClassName("btntt");
+			// Modal을 닫는 close 클래스를 가져온다.
+			var spanes = document.getElementsByClassName("close");
+			var funcs = [];
 			
-			const openBtn = document.getElementById('openmodal'+num);
-			//onModal button
-			
-			const closeBtn = document.getElementById('close'+num);
-			//offModal button
-			
-			const modal = document.querySelector('.modal'+num);
-			//HTML에서의 모달 최상위 요소
-			
-			const overlay = document.querySelector('.modal__overlay'+num);
-			//모달창이 활성화되면 흐린 배경을 표현하는 요소
-			
-			const openModal = () => {
-			modal.classList.remove('hidden');
+			// Modal을 띄우고 닫는 클릭 이벤트를 정의한 함수
+			function Modal(num) {
+				return function(){
+					// 해당 클래스의 내용을 클릭하면 Modal을 띄운다.
+					btns[num].onclick = function(){
+						modals[num].style.display = "block";
+						console.log(num);
+					};
+					
+					// 닫기 버튼 클릭하면 Modal이 닫힌다.
+					spanes[num].onclick = function() {
+						modals[num].style.display = "none";
+					};
+				};
 			}
-			
-			const closeModal = () => {
-			modal.classList.add('hidden');
+			// 원하는 Modal 수만큼 Modal 함수를 호출해서 funcs 함수에 정의한다.
+			for(var i = 0; i< btns.length; i++){
+				funcs[i] = Modal(i);
 			}
-			openBtn.addEventListener('click', openModal);
-			//onModal
-			
-			closeBtn.addEventListener('click', closeModal);
-			//모달창 내부의 닫기 버튼
-			
-			overlay.addEventListener('click', closeModal);
-			//모달창 영역 밖
-		}
+			// 원하는 Modal 수만큼 funcs 함수를 호출한다.
+			for(var j = 0; j< btns.length; j++){
+				funcs[j]();
+			}
+			// Modal 영역 밖을 클릭하면 Modal을 닫는다.
+			window.onclick = function(event) {
+				if(event.target.className == "modal"){
+					event.target.style.display = "none";	
+				}
+			};
 		
 		</script>
+		
     </body>
 </html>
 
