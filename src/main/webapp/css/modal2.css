@@ -2,20 +2,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 .modal {
-  position: fixed;
+position: fixed;
 top: 50%;
-left: 70%;
+left: 60%;
 -webkit-transform: translate(-50%, -50%);
--moz-transform: translate(-50%, -50%);
 -ms-transform: translate(-50%, -50%);
+-moz-transform: translate(-50%, -50%);
 -o-transform: translate(-50%, -50%);
-transform: translate(-50%, -50%);  
-  width: 50%; 
-  height: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000000000000000;
+transform: translate(-50%, -50%);
+transform-origin: 50% 50%;
+width: 50%; 
+height: 40%;
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 10000000000000000;
 }
 .modal__overlay {
   /* background-color: rgba(0, 0, 0, 0.6);  */
@@ -25,10 +26,10 @@ transform: translate(-50%, -50%);
   z-index: 10000000000000000;
 }
 .modal__content {
-  width: 40%;
+  width: 60%;
   height: auto;
   background-color:white;
-  text-align: center;
+  /* text-align: center; */
   padding: 50px 50px;
   position: relative;
   border-radius: 10px;
