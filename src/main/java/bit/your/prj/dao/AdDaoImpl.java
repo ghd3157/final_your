@@ -187,6 +187,24 @@ public class AdDaoImpl implements AdDao{
 		return session.selectOne(ns+"getMarketCount",ad);
 	}
 
+	@Override
+	public List<RecipeDto> recipeexcellist() {
+		return session.selectList(ns+"recipeexcellist");
+
+	}
+
+	@Override
+	public List<CCDto> ccexcellist() {
+		return session.selectList(ns+"ccexcellist");
+
+	}
+
+	@Override
+	public List<MarketDto> marketexcellist() {
+		return session.selectList(ns+"marketexcellist");
+
+	}
+
 
 	
 

@@ -68,15 +68,15 @@ public class HomeController {
 		
 		/*	마감임박 쿠킹클래스	 */		
 		int ccsn = pa.getPageNumber();	// 0 1 2 3 4
-		int ccstart = 1 + ccsn * 2;	// 1  11
-		int ccend = (ccsn + 1) * 2;	// 10 20 
+		int ccstart = 1 + ccsn * 3;	// 1  11
+		int ccend = (ccsn + 1) * 3;	// 10 20 
 		
 		pa.setStart(ccstart);
 		pa.setEnd(ccend);
 		
 		List<CCDto> cclist = mcservice.maincclist(pa);
 		model.addAttribute("homecclist", cclist);
-		System.out.println("ddddddddddddddddddddddddddddd"+cclist.toString());
+		//System.out.println("ddddddddddddddddddddddddddddd"+cclist.toString());
 		
 		/*
 		 * int cctotalCount = ccservice.getCCCount(pa);
@@ -92,5 +92,9 @@ public class HomeController {
 		return "home.tiles";
 	}
 
-	
+	@RequestMapping(value = "testcss.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public String testcss(Model model, RecipeParam  param) {
+
+		return "testcss.tiles";
+	}
 }

@@ -12,7 +12,7 @@ public interface MemberDao {
 	
 	MemberDto findid(MemberDto mem);
 	
-	int updatepwd(MemberDto mem) throws Exception;
+	int updatepwd(MemberDto dto) throws Exception;
 	
 	MemberDto readmember(String id) throws Exception;
 	
@@ -28,6 +28,8 @@ public interface MemberDao {
 	boolean nicknameCheck(String nickname);
 	boolean emailCheck(String email);
 	MemberDto getMember(String id);
+
+
 
 	
 }

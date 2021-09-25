@@ -26,7 +26,9 @@ public interface CCDao {
 	
 	//글 수정
 	boolean updateCC(CCDto dto);
-
+	
+	//방금 쓴글 시퀀스 가져오기
+	List<Integer> getNowCC(CCDto dto);
 /////////////////클래스멤버/////////////////////////////////
 	//클래스 참여
 	boolean enterCM(CMDto dto);
@@ -36,6 +38,9 @@ public interface CCDao {
 	
 	//참여인원 리스트2
 	List<Map<String, Object>> getNickNameCM(String nickname);
+	
+	//참여인원 닉네임 리스트
+	List<String> getCMNickname(int seq_class);
 	
 	//탈퇴하기
 	void resignCM(CMDto dto);

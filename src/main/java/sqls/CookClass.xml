@@ -195,6 +195,15 @@
 	WHERE SEQ=#{seq}
 </update>
 
+<!-- 글쓴 방금쓴거 바로가져오기 -->
+<select id="getNowCC" parameterType="bit.your.prj.dto.CCDto" resultType="Integer">
+	SELECT SEQ
+	FROM COOKCLASS
+	WHERE TITLE=#{title} AND KINDS=#{kinds} AND LOCATION=#{location} AND CONTENT=#{content} AND MEMBERNUM=#{membernum} AND 
+		EDATE=#{edate} AND CDATE1=#{cdate1} AND CDATE2=#{cdate2} AND CDAY=#{cday} AND FILENAME=#{filename} AND NEWFILENAME=#{newfilename}
+</select> 
+
+
 <!-- 클래스참가 -->
 <insert id="enterCM" parameterType="bit.your.prj.dto.CMDto">
 	INSERT INTO CLASSMEMBER(SEQ, SEQ_CLASS, NICKNAME, GENDER)
@@ -208,12 +217,20 @@
 	WHERE SEQ_CLASS = #{seq_class}
 </select>
 
+
 <!-- seq로 찾기 참여인원 -->
 <select id="getCM" parameterType="java.lang.Integer" resultType="bit.your.prj.dto.CMDto">
 	SELECT SEQ_CLASS, NICKNAME, GENDER
 	FROM CLASSMEMBER
 	WHERE SEQ_CLASS = #{seq_class}
 	ORDER BY SEQ
+</select>
+
+<!-- seq로 찾기 참여인원 닉네임만 가져오기-->
+<select id="getCMNickname" parameterType="java.lang.Integer" resultType="String">
+	SELECT NICKNAME
+	FROM CLASSMEMBER
+	WHERE SEQ_CLASS = #{seq_class}
 </select>
 
 <!-- id로 찾기 참여인원 -->

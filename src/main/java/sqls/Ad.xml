@@ -24,7 +24,7 @@
 					AND ID=#{search}
 				</if>	
 			</if>	
-			ORDER BY SEQ DESC)
+			ORDER BY SEQ ASC)
 		WHERE RNUM BETWEEN ${start} AND ${end}		
 	</select>
 
@@ -52,6 +52,20 @@
 		FROM MEMBER
 	</select>
 
+	<select id="recipeexcellist" resultType="bit.your.prj.dto.RecipeDto">
+		SELECT *
+		FROM RECIPE
+	</select>
+	
+	<select id="ccexcellist" resultType="bit.your.prj.dto.CCDto">
+		SELECT *
+		FROM RECIPE
+	</select>
+	
+	<select id="marketexcellist" resultType="bit.your.prj.dto.MarketDto">
+		SELECT *
+		FROM MARKET
+	</select>
 	
 	
 	
@@ -267,12 +281,12 @@
 	
 <!-- 클래스리스트, 총수 -->
 <select id="allclasslist" parameterType="bit.your.prj.param.Param" resultType="bit.your.prj.dto.CCDto">
-	SELECT SEQ, NICKNAME, TITLE, LOCATION, KINDS, READCOUNT, CONTENT, MEMBERNUM, RDATE, EDATE,
-		   CDATE, FILENAME, NEWFILENAME, DEL	
+	SELECT SEQ, NICKNAME, TITLE, LOCATION, KINDS, READCOUNT, MEMBERCOUNT, CONTENT, MEMBERNUM, RDATE, EDATE,
+		   CDATE1, CDATE2, CDAY, FILENAME, NEWFILENAME, DEL		
 	FROM	   
 		(SELECT ROW_NUMBER()OVER(ORDER BY SEQ DESC) AS RNUM,
-		   SEQ, NICKNAME, TITLE, LOCATION, KINDS, READCOUNT, CONTENT, MEMBERNUM, RDATE, EDATE,
-		   CDATE, FILENAME, NEWFILENAME, DEL	
+		   SEQ, NICKNAME, TITLE, LOCATION, KINDS, READCOUNT, MEMBERCOUNT, CONTENT, MEMBERNUM, RDATE, EDATE,
+		   CDATE1, CDATE2, CDAY, FILENAME, NEWFILENAME, DEL	
 		FROM COOKCLASS   		
 		WHERE 1=1
 		<if test="choice != null and choice != '' and search != null and search != ''">
@@ -310,11 +324,11 @@
 
 <!-- 판매리스트 -->
  <select id="allmarketlist" parameterType="bit.your.prj.param.Param" resultType="bit.your.prj.dto.MarketDto">
-  	SELECT SEQ, CANUM, ITEMNUM, TITLE, SUBTITLE, PRICE, GRAM, COUNTRY, EXPIRATION, COUNT, CONTENT, MAINPT, NEWMAINPT,
+  	SELECT SEQ, CANUM, SUBCA, ITEMNUM, TITLE, SUBTITLE, PRICE, GRAM, COUNTRY, EXPIRATION, COUNT, CONTENT, MAINPT, NEWMAINPT,
   		   RVCOUNT, RDATE
   	FROM
-  		(SLELCT ROW_NUMBER()OVER(ORDER BY SEQ DESC) AS RNUM,
-  		SEQ, CANUM, ITEMNUM, TITLE, SUBTITLE, PRICE, GRAM, COUNTRY, EXPIRATION, COUNT, CONTENT, MAINPT, NEWMAINPT,
+  		(SELECT ROW_NUMBER()OVER(ORDER BY SEQ DESC) AS RNUM,
+  		SEQ, CANUM, SUBCA, ITEMNUM, TITLE, SUBTITLE, PRICE, GRAM, COUNTRY, EXPIRATION, COUNT, CONTENT, MAINPT, NEWMAINPT,
   		   RVCOUNT, RDATE
 	FROM MARKET
 	WHERE 1=1
@@ -322,13 +336,28 @@
 			<if test="choice == 'title'">
 				AND TITLE LIKE '%'||#{search}||'%'
 			</if>
-			<if test="choice == 'nickname'">
-				AND NICKNAME=#{search}
+			<if test="choice == 'subtitle'">
+				AND SUBTITLE=#{search}
 			</if>
 		</if>
   	ORDER BY SEQ ASC)
-  
+  	WHERE RNUM BETWEEN ${start} AND ${end}	
   </select>
+
+<select id="getMarketCount" parameterType="bit.your.prj.param.Param" resultType="Integer">
+	SELECT NVL(COUNT(*), 0)
+	FROM MARKET
+	WHERE 1=1
+	<if test="choice != null and choice != '' 
+		and search != null and search != ''">
+		<if test="choice == 'title'">
+			AND TITLE LIKE '%'||#{search}||'%'
+		</if>
+		<if test="choice == 'subtitle'">
+			AND SUBTITLE=#{search}
+		</if>
+	</if>
+</select>
 	
 	
 	

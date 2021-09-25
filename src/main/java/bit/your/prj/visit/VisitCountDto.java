@@ -35,7 +35,10 @@ public class VisitCountDto {
 
 	@Override
 	public String toString() {
+		System.out.println( "@@@@@@@@@@@VisitCountDto [visit_id=" + visit_id + ", visit_ip=" + visit_ip + ", visit_agent=" + visit_agent + "]");
+		
 		return "VisitCountDto [visit_id=" + visit_id + ", visit_ip=" + visit_ip + ", visit_agent=" + visit_agent + "]";
+
 	}
     
     

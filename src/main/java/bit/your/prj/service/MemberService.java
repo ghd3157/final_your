@@ -15,6 +15,8 @@ public interface MemberService {
 
 	MemberDto findid(MemberDto mem);
 	
+	int updatepwd(MemberDto mem) throws Exception;
+	
 	
     void sendEmail(MemberDto mem, String div) throws Exception;
     void findpw(HttpServletResponse resp, MemberDto mem) throws Exception;

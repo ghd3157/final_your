@@ -54,11 +54,17 @@ public class CCServiceImpl implements CCService {
 		dao.deleteCC(seq);
 	}
 	
+	
 	@Override
 	public boolean updateCC(CCDto dto) {
 		return dao.updateCC(dto);
 	}
 	
+	@Override
+	public List<Integer> getNowCC(CCDto dto) {
+		return dao.getNowCC(dto);
+	}
+
 	@Override
 	public boolean enterCM(CMDto dto) {
 		return dao.enterCM(dto);
@@ -73,7 +79,12 @@ public class CCServiceImpl implements CCService {
 	public List<Map<String, Object>> getNickNameCM(String nickname) {
 		return dao.getNickNameCM(nickname);
 	}
-
+	
+	@Override
+	public List<String> getCMNickname(int seq_class) {
+		return dao.getCMNickname(seq_class);
+	}
+	
 	@Override
 	public void resignCM(CMDto dto) {
 		dao.resignCM(dto);		

@@ -26,11 +26,21 @@ public class CalendarDaoImpl implements CalendarDao {
 		int n = session.insert(ns + "writeCalendar", dto);
 		return n>0?true:false;
 	}
+	
+	@Override
+	public boolean writeTeachCalendar(CalendarDto dto) {
+		int n = session.insert(ns + "writeTeachCalendar", dto);
+		return n>0?true:false;
+	}
 
 	@Override
 	public void deleteCalendar(CalendarDto dto) {
 		session.delete(ns + "deleteCalendar", dto);
 	}
-	
-	
+
+	@Override
+	public void deleteMemberCal(int seq_class) {
+		session.delete(ns + "deleteMemberCal", seq_class);		
+	}
+		
 }

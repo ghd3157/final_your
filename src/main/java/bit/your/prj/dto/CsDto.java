@@ -19,11 +19,14 @@ public class CsDto implements Serializable {
 	private int del; // 삭제 
 	private int readcount; // 조회수
 	
+	private String userid;
+	
 	public CsDto() {
 	}
 
+
 	public CsDto(int seq, String id, int ref, int step, int depth, String title, String content, String rdate, int type,
-			int del, int readcount) {
+			int del, int readcount, String userid) {
 		super();
 		this.seq = seq;
 		this.id = id;
@@ -36,111 +39,146 @@ public class CsDto implements Serializable {
 		this.type = type;
 		this.del = del;
 		this.readcount = readcount;
+		this.userid = userid;
 	}
 
-	public CsDto(String id, String title, String content, int type) {
+	public CsDto(String id, String title, String content, int type, String userid) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.type = type;
+		this.userid = userid;
+
 	}
+
 
 	public int getSeq() {
 		return seq;
 	}
 
+
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
+
 
 	public String getId() {
 		return id;
 	}
 
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 
 	public int getRef() {
 		return ref;
 	}
 
+
 	public void setRef(int ref) {
 		this.ref = ref;
 	}
+
 
 	public int getStep() {
 		return step;
 	}
 
+
 	public void setStep(int step) {
 		this.step = step;
 	}
+
 
 	public int getDepth() {
 		return depth;
 	}
 
+
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
+
 
 	public String getTitle() {
 		return title;
 	}
 
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 
 	public String getContent() {
 		return content;
 	}
 
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 
 	public String getRdate() {
 		return rdate;
 	}
 
+
 	public void setRdate(String rdate) {
 		this.rdate = rdate;
 	}
+
 
 	public int getType() {
 		return type;
 	}
 
+
 	public void setType(int type) {
 		this.type = type;
 	}
+
 
 	public int getDel() {
 		return del;
 	}
 
+
 	public void setDel(int del) {
 		this.del = del;
 	}
+
 
 	public int getReadcount() {
 		return readcount;
 	}
 
+
 	public void setReadcount(int readcount) {
 		this.readcount = readcount;
 	}
+
+
+	public String getUserid() {
+		return userid;
+	}
+
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
 
 	@Override
 	public String toString() {
 		return "CsDto [seq=" + seq + ", id=" + id + ", ref=" + ref + ", step=" + step + ", depth=" + depth + ", title="
 				+ title + ", content=" + content + ", rdate=" + rdate + ", type=" + type + ", del=" + del
-				+ ", readcount=" + readcount + "]";
+				+ ", readcount=" + readcount + ", userid=" + userid + "]";
 	}
-	
 	
 	
 	

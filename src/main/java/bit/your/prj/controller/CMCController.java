@@ -57,7 +57,7 @@ public class CMCController {
 		Map<String, Object> result = new HashMap<>();		
 		System.out.println(dto.toString()+"-----------------------");
 		try {			
-			service.writeCMC(dto);
+			service.writeReCMC(dto);
 			System.out.println(dto.toString()+"-----------------------");
 			result.put("status", "OK");
 			

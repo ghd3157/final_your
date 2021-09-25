@@ -24,8 +24,20 @@ public class CalendarServiceImpl implements CalendarService {
 		return dao.writeCalendar(dto);
 	}
 
+	
+	@Override
+	public boolean writeTeachCalendar(CalendarDto dto) {
+		return dao.writeTeachCalendar(dto);
+	}
+
 	@Override
 	public void deleteCalendar(CalendarDto dto) {
 		dao.deleteCalendar(dto);
 	}
+
+	@Override
+	public void deleteMemberCal(int seq_class) {
+		dao.deleteMemberCal(seq_class);	
+	}
+	
 }

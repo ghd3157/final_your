@@ -49,18 +49,20 @@ public interface AdDao {
 	//레시피 리스트, excel download
 	List<RecipeDto> allrecipelist(Param ad);
 	int getRecipeCount(Param ad);
+	List<RecipeDto> recipeexcellist();
+
 	//엑셀 나중에 확인해서 작성 필
 	
 	//클래스 리스트, excel download
 	List<CCDto> allclasslist(Param ad);
 	int getClassCount(Param ad);
-	//엑셀추가자리
+	List<CCDto> ccexcellist();
 	
 	
 	//판매리스트, excel
 	List<MarketDto> allmarketlist(Param ad);
 	int getMarketCount(Param ad);
-	//엑셀추가자리
+	List<MarketDto> marketexcellist();
 	
 	
 	

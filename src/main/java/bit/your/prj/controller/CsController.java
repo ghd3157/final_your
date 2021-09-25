@@ -31,14 +31,17 @@ public class CsController {
 			log.info("CsController cslist() " + new Date());
 			
 			int sn = param.getPageNumber();	// 0 1 2 3 4
-			int start = 1 + sn * 10;	// 1  11
-			int end = (sn + 1) * 10;	// 10 20 
+			int start = 1 + sn * 20;	// 1  11
+			int end = (sn + 1) * 20;	// 10 20 
 			
 			param.setStart(start);
 			param.setEnd(end);
 			
 			List<CsDto> list = service.getCslist(param);
 			model.addAttribute("csbbslist", list);
+			
+			
+
 			
 			int totalCount = service.getCsCount(param);
 			model.addAttribute("totalCount", totalCount);
@@ -80,6 +83,8 @@ public class CsController {
 		CsDto cs = service.getCsBbs(seq);
 		model.addAttribute("cs", cs);
 		
+		System.out.println(cs.toString());
+
 		return "csdetail.tiles";
 	}
 	
@@ -108,9 +113,11 @@ public class CsController {
 	}
 	//답글
 	@RequestMapping(value = "answer.do", method = RequestMethod.GET)
-	public String answer(int seq, Model model) {
-		
+	public String answer(int seq, String id, Model model) {
+				
 		model.addAttribute("doc_title", "답글추가");
+
+		model.addAttribute("userid",id);
 		
 		CsDto cs = service.getCsBbs(seq);
 		model.addAttribute("cs", cs);
@@ -120,7 +127,9 @@ public class CsController {
 	
 	@RequestMapping(value = "answerAf.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String answerAf(CsDto cs, Model model) {
+		
 		boolean b = service.reply(cs);
+		
 		return "redirect:/cslist.do";
 	}
 }

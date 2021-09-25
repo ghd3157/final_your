@@ -2,6 +2,13 @@ package bit.your.prj.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,18 +23,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import bit.your.prj.util.CalendarUtil;
 import bit.your.prj.util.PdsUtil;
 import bit.your.prj.dto.CCDto;
 import bit.your.prj.dto.CMDto;
+import bit.your.prj.dto.CalendarDto;
 import bit.your.prj.dto.MemberDto;
 import bit.your.prj.param.ClassParam;
 import bit.your.prj.service.CCService;
+import bit.your.prj.service.CalendarService;
 
 @Controller
 public class CCController {
 	
 	@Autowired
 	CCService service;
+	
+	@Autowired
+	CalendarService service2;
 	
 	/*
 	@RequestMapping(value = "cclist.do", method = RequestMethod.GET) 
@@ -88,7 +101,7 @@ public class CCController {
 							//@RequestParam("cdate2") String cdate2,
 							@RequestParam(value = "fileload", required = false)
 							MultipartFile fileload,
-							HttpServletRequest req){
+							HttpServletRequest req) throws ParseException{
 		
 		//주소합치기
 		String location = location1 + ", " + location2;
@@ -123,6 +136,91 @@ public class CCController {
 			// DB에 저장
 			service.uploadCC(ccdto);
 			
+			System.out.println("ccdto.getSeq()>>>>>>>>>>>>>>>>>>>>"  + ccdto.getSeq());
+			
+			List<Integer> dto = service.getNowCC(ccdto);
+		
+			int seq_class = dto.get(0);
+			String title = ccdto.getTitle();
+			String cdate1 = ccdto.getCdate1();
+			String cdate2 = ccdto.getCdate2();
+			String cday = ccdto.getCday();
+			String nickname = ccdto.getNickname();
+			
+			//날짜 형식 바꾸기 ex)2021-09-03 -> 20210903 
+			//시작날
+			String yyyy1 = cdate1.substring(0, 4);
+			String mm1 = cdate1.substring(5, 7);
+			String dd1 = cdate1.substring(8, 10);
+			String cdate3 = yyyy1+ mm1 + dd1;
+				
+			//마지막날
+			String yyyy2 = cdate2.substring(0, 4);
+			String mm2 = cdate2.substring(5, 7);
+			String dd2 = cdate2.substring(8, 10);
+			String cdate4 = yyyy2+ mm2 + dd2;
+			
+			//날짜들을 담을 배열
+			ArrayList<String> dates = new ArrayList<String>();
+					
+			//요일을 한글자씩 담을 배열
+			char[] array_word = new char[cday.length()];
+					
+			//요일을 숫자로 변환하여 담을 배열
+			List<Integer> days = new ArrayList<Integer>();
+			
+			for(int i=0; i<array_word.length; i++){ 
+				array_word[i]=(cday.charAt(i));	//요일을 한글자씩 배열에 저장
+				
+				days.add(CalendarUtil.Switch(array_word[i])); //한글자씩 구분하여 숫자로 변화하여 담는다
+			}	
+			
+			Calendar cal = Calendar.getInstance();
+			DateFormat df = new SimpleDateFormat("yyyyMMdd");
+			
+			String StartDate = cdate3;
+			String EndDate = cdate4;
+			
+			Date d1 = df.parse(StartDate);
+			Date d2 = df.parse(EndDate);
+					
+			Date currentDate = d1;
+					
+			while (currentDate.compareTo(d2) <= 0){
+				cal.setTime(currentDate);
+				int num = cal.get(Calendar.DAY_OF_WEEK);
+			
+				//시작날이 여러 수업요일에 포함되어있는가? 포함되어있으면 배열추가
+				if(days.contains(num)) {
+					dates.add(df.format(currentDate));
+					cal.add(Calendar.DAY_OF_MONTH, 1);
+					currentDate = cal.getTime();
+				//다르면 다른날로 넘김
+				}else {
+					cal.add(Calendar.DAY_OF_MONTH, 1);
+					currentDate = cal.getTime();
+				}
+			}
+			
+			List<CalendarDto> list = new ArrayList<CalendarDto>();
+			
+			for (int j = 0; j < dates.size(); j++) {
+				//dto에 날짜와 파라미터를 담는다
+				CalendarDto tempDto = new CalendarDto();
+				tempDto.setSeq_class(seq_class);
+				tempDto.setNickname(nickname);
+				tempDto.setTitle(title);
+				tempDto.setCdate(dates.get(j));
+				list.add(tempDto);
+			}	
+			
+			System.out.println("list>>>>>>>>>" + list.toString());
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("list", list);
+			for(CalendarDto dto1 : list) {
+		        service2.writeTeachCalendar(dto1);	
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,6 +256,7 @@ public class CCController {
 	@RequestMapping(value = "ccdelete.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String delete(int seq, Model model) {		
 		service.deleteCC(seq);
+		service2.deleteMemberCal(seq);
 		return "redirect:/cclist.do";		
 	}
 
@@ -217,11 +316,11 @@ public class CCController {
 			
 			// 기존의 파일명으로 설정
 			ccdto.setFilename(namefile);
-			
 			ccdto.setNewfilename(newnamefile);
 			
 			// DB
 			service.updateCC(ccdto);	
+			
 		}
 		
 		return "redirect:/cclist.do";

@@ -10,5 +10,9 @@ public interface CalendarService {
 
 	boolean writeCalendar(CalendarDto dto);	
 	
+	boolean writeTeachCalendar(CalendarDto dto);
+	
 	void deleteCalendar(CalendarDto dto);
+	
+	void deleteMemberCal(int seq_class);
 }

@@ -4,12 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="Member">
-  
+   
 <select id="login" parameterType="bit.your.prj.dto.MemberDto"
 	resultType="bit.your.prj.dto.MemberDto">
 	SELECT SEQ, ID, PWD, NAME, NICKNAME, BIRTH, GENDER, PHONE, ADDRESS1, EMAIL, JOINDATE, AUTH
 	FROM MEMBER
-	WHERE ID=#{id} AND PWD=#{pwd} AND AUTH=0
+	WHERE ID=#{id} AND PWD=#{pwd} AND AUTH IN (0,1)
 </select>
 
 <select id="getId" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -61,6 +61,15 @@
 
 
 <!-- 남규추가 -->
+	<select id="adminlogin" parameterType="bit.your.prj.dto.MemberDto"
+		resultType="bit.your.prj.dto.MemberDto">
+		SELECT SEQ, ID, PWD, NAME, NICKNAME, BIRTH, GENDER, PHONE, ADDRESS1, EMAIL, JOINDATE, AUTH
+		FROM MEMBER
+		WHERE ID=#{id} AND PWD=#{pwd} AND AUTH=1
+	</select>
+
+
+
 	<select id="idCheck" resultType="boolean">
 		SELECT COUNT(*) 
 		FROM MEMBER 
