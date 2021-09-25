@@ -126,6 +126,7 @@ public class MarketController {
 		int cartCount = service.getCartCount(login.getId());
 		
 		model.addAttribute("cartCount",cartCount);
+		model.addAttribute("canum", canum);
 		
 		return "marketlist.tiles";
 		
@@ -143,6 +144,21 @@ public class MarketController {
 		model.addAttribute("cartCount",cartCount);
 		
 		return "newMarketList.tiles";
+	}
+	@RequestMapping(value = "best.do", method = RequestMethod.GET)
+	public String bestMarketlist(Model model, HttpServletRequest request) {
+		
+		
+		List<MarketDto> list2 = service.bestmarketlist();
+		
+		MemberDto login = (MemberDto)request.getSession().getAttribute("login"); 
+		
+		int cartCount = service.getCartCount(login.getId());
+		
+		model.addAttribute("bestmarketlist", list2);
+		model.addAttribute("cartCount",cartCount);
+		
+		return "bestMarketList.tiles";
 	}
 	
 	@RequestMapping(value = "marketwrite.do", method = {RequestMethod.GET, RequestMethod.POST})
@@ -172,7 +188,7 @@ public class MarketController {
 		//String fupload = req.getServletContext().getRealPath("/upload");
 		
 		//폴더
-		String fupload = "/Users/p.nam9/Desktop/your/your/src/main/webapp/marketimage";
+		String fupload = "C:/finalPrj/your_0905/src/main/webapp/marketimage";
 		
 		System.out.println("fupload:" + fupload);
 		
@@ -217,11 +233,34 @@ public class MarketController {
 		
 		service.addCart(dto);
 		int Count = service.getCartCount(id);
-		int cartCount = Count + 1;
-		model.addAttribute("cartCount",cartCount);
+		int CC = Count + 1;
+		String cartCount = Integer.toString(CC);
 		
 		
-		return "";
+		return cartCount;
+	}
+	@ResponseBody
+	@RequestMapping(value = "addcart2.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public String addcart2(int itemnum, int count, HttpServletRequest request) {
+		
+		MemberDto login = (MemberDto)request.getSession().getAttribute("login");
+		MarketDto item = service.getItem(itemnum);
+		
+		//System.out.println(item.toString());
+		
+		CartDto dto = new CartDto(login.getId(), item.getCanum(), itemnum, 
+								  item.getNewmainpt(), item.getTitle(), 
+								  count, item.getPrice(), login.getAddress1());
+		
+		//System.out.println("dto.toString>>>>>>>>>>>>"+dto.toString());
+		
+		service.addCart(dto);
+		int Count = service.getCartCount(login.getId());
+		int CC = Count + 1;
+		String cartCount = Integer.toString(CC);
+		
+		
+		return cartCount;
 	}
 	
 	
@@ -381,7 +420,7 @@ public class MarketController {
 			
 			List<ReviewDto> rvlist = service.getReviewList(login.getNickname());
 			
-			//System.out.println(rvlist.toString());
+			System.out.println(rvlist.toString());
 			
 			//System.out.println(list);
 			model.addAttribute("rvlist",rvlist);
@@ -413,6 +452,20 @@ public class MarketController {
 			service.UpReviewCount(dto.getItemnum());
 			
 			return "redirect:/order.do";
+		}
+		
+		@PostMapping("checkdel.do")
+		public String checkData(@RequestParam(value="dataList", required=false) 
+								List<String> dataList,HttpServletRequest request) {
+			
+			String ok = "OK";
+			
+			for(String a : dataList) {
+				int seq = Integer.parseInt(a);
+				service.delCart(seq);
+			};
+			
+			return ok;
 		}
 	
 	

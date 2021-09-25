@@ -16,17 +16,21 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 @Component
 public class VisitCounter implements HttpSessionListener{
 	
-	@Autowired
-	SqlSessionTemplate template;
 	
+	@Autowired
+	SqlSessionTemplate session;
+	
+	
+	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
 		WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
 		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		
-		
-		VisitCountDao dao = getSessionService(se).getMapper(VisitCountDao.class);
-		
+		VisitCountDao dao = (VisitCountDao)wac.getBean("visitCountDAO");
+		System.out.println("daodaodaodaodaodaodaodaodaodaodaodaodaodaodaodao============");
+		System.out.println(dao);
+
 		VisitCountDto dto = new VisitCountDto();
 		dto.setVisit_ip(req.getRemoteAddr());
 		dto.setVisit_agent(req.getHeader("User-Agent"));
@@ -36,15 +40,9 @@ public class VisitCounter implements HttpSessionListener{
 		//System.out.println("sessionCreadted = " + req.getHeader("refer") );
 		
 	}
-	
+	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
 		
-	}
-	
-	private SqlSessionTemplate getSessionService(HttpSessionEvent se) {
-		WebApplicationContext context = WebApplicationContextUtils
-				.getWebApplicationContext(se.getSession().getServletContext());
-		return (SqlSessionTemplate) context.getBean("sqlSession");
 	}
 
 }

@@ -7,8 +7,8 @@
 
 <!-- List 뿌리기 -->
 	<select id="cslist" parameterType="bit.your.prj.param.Param" resultType="bit.your.prj.dto.CsDto">
-		SELECT SEQ, ID, REF, STEP, DEPTH, READCOUNT, TITLE, CONTENT, RDATE, TYPE, DEL
-		FROM (SELECT ROW_NUMBER()OVER(ORDER BY REF DESC, STEP ASC) AS RNUM,SEQ, ID, REF, STEP, DEPTH, READCOUNT, TITLE, CONTENT, RDATE, TYPE, DEL
+		SELECT SEQ, ID, REF, STEP, DEPTH, READCOUNT, TITLE, CONTENT, RDATE, TYPE, DEL, USERID
+		FROM (SELECT ROW_NUMBER()OVER(ORDER BY REF DESC, STEP ASC) AS RNUM,SEQ, ID, REF, STEP, DEPTH, READCOUNT, TITLE, CONTENT, RDATE, TYPE, DEL, USERID
 		FROM CS_BBS
 		WHERE 1=1
 			<if test="choice != null and choice != '' 
@@ -54,7 +54,7 @@
 	
 <!-- Detail view -->	
 	<select id="getCsBbs" parameterType="java.lang.Integer" resultType="bit.your.prj.dto.CsDto">
-		SELECT SEQ, ID, REF, STEP, DEPTH, TITLE, CONTENT, RDATE, TYPE, DEL, READCOUNT
+		SELECT SEQ, ID, REF, STEP, DEPTH, TITLE, CONTENT, RDATE, TYPE, DEL, READCOUNT, USERID
 		FROM CS_BBS
 		WHERE SEQ=#{seq}
 	</select>
@@ -86,18 +86,16 @@
 		AND STEP > (SELECT STEP FROM CS_BBS WHERE SEQ=#{seq} )
 	</update>
 	<insert id="replyCsBbsInsert" parameterType="bit.your.prj.dto.CsDto">
-		INSERT INTO CS_BBS(SEQ, ID, REF, STEP, DEPTH, TITLE, CONTENT, RDATE, DEL, READCOUNT )
+		INSERT INTO CS_BBS(SEQ, ID, REF, STEP, DEPTH, READCOUNT, TITLE, CONTENT, RDATE, TYPE, DEL, USERID )
 		VALUES(SEQ_CS.NEXTVAL, #{id},
 		(SELECT REF FROM CS_BBS WHERE SEQ=#{seq}),
 		(SELECT STEP FROM CS_BBS WHERE SEQ=#{seq}) + 1,
-		(SELECT DEPTH FROM CS_BBS WHERE SEQ=#{seq}) + 1,
-		#{title}, #{content}, SYSDATE, 0, 0)
+		(SELECT DEPTH FROM CS_BBS WHERE SEQ=#{seq}) + 1,0,
+		#{title}, #{content}, SYSDATE, 0, 0, #{userid})
 	</insert>
 	
-	
-	
-	
-	
+		
+	<!-- SEQ, ID, REF, STEP, DEPTH, TITLE, CONTENT, RDATE, DEL, READCOUNT -->
 	
 
 </mapper>

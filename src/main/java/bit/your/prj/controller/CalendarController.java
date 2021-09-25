@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import bit.your.prj.dto.CMDto;
 import bit.your.prj.dto.CalendarDto;
 import bit.your.prj.dto.MemberDto;
 import bit.your.prj.param.CalendarParam;
+import bit.your.prj.service.CCService;
 import bit.your.prj.service.CalendarService;
 import bit.your.prj.util.CalendarUtil;
 
@@ -30,6 +32,9 @@ public class CalendarController {
 
 	@Autowired
 	CalendarService service;
+	
+	@Autowired
+	CCService service2;
 	
 	@RequestMapping(value = "calist.do", method = RequestMethod.GET)
 	public String calendarlist(Model model, CalendarParam param, HttpSession session) {
@@ -83,7 +88,7 @@ public class CalendarController {
 		//System.out.println("yyyymm>>>>>>>>" + yyyymm);
 		
 		List<CalendarDto> list = service.getCalendar(fcal); 
-		System.out.println("callist>>>>>" + list);
+		//System.out.println("callist>>>>>" + list);
 		
 		model.addAttribute("flist", list);	// 일정목록
 		model.addAttribute("cal", param);	// 날짜
@@ -102,6 +107,13 @@ public class CalendarController {
 		
 		model.addAttribute("doc_title", "일정등록");
 		
+		System.out.println("seq_class>>>>>>>>>" + seq_class);
+		System.out.println("nickname>>>>>>>>>" + nickname);
+		System.out.println("title>>>>>>>>>" + title);
+		System.out.println("cdate1>>>>>>>>>" + cdate1);
+		System.out.println("cdate2>>>>>>>>>" + cdate2);
+		System.out.println("cday>>>>>>>>>" + cday);
+		
 		//날짜 형식 바꾸기 ex)2021-09-03 -> 20210903 
 		//시작날
 		String yyyy1 = cdate1.substring(0, 4);
@@ -115,113 +127,69 @@ public class CalendarController {
 		String dd2 = cdate2.substring(8, 10);
 		String cdate4 = yyyy2+ mm2 + dd2;
 		
-		if(cday.length() > 1) {
-			char[] array_word = new char[cday.length()];
-			for(int i=0; i<array_word.length; i++){ 
-				array_word[i]=(cday.charAt(i));//스트링을 한글자씩 끊어 배열에 저장
+		//날짜들을 담을 배열
+		ArrayList<String> dates = new ArrayList<String>();
 				
-				List<Integer> days = new ArrayList<Integer>(); //
-				days.add(CalendarUtil.Switch(array_word[i]));
+		//요일을 한글자씩 담을 배열
+		char[] array_word = new char[cday.length()];
 				
-				Calendar cal = Calendar.getInstance();
-				DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		//요일을 숫자로 변환하여 담을 배열
+		List<Integer> days = new ArrayList<Integer>();
+		
+		for(int i=0; i<array_word.length; i++){ 
+			array_word[i]=(cday.charAt(i));	//요일을 한글자씩 배열에 저장
+			
+			days.add(CalendarUtil.Switch(array_word[i])); //한글자씩 구분하여 숫자로 변화하여 담는다
+		}	
+		
+		Calendar cal = Calendar.getInstance();
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		
+		String StartDate = cdate3;
+		String EndDate = cdate4;
+		
+		Date d1 = df.parse(StartDate);
+		Date d2 = df.parse(EndDate);
 				
-				String StartDate = cdate3;
-				String EndDate = cdate4;
+		Date currentDate = d1;
 				
-				Date d1 = df.parse(StartDate);
-				Date d2 = df.parse(EndDate);
-				
-				ArrayList<String> dates = new ArrayList<String>();
-				
-				Date currentDate = d1;
-				
-				while (currentDate.compareTo(d2) <= 0){
-					cal.setTime(currentDate);
-					int num = cal.get(Calendar.DAY_OF_WEEK);
-				
-					//시작날이 여러 수업요일에 포함되어있는가? 포함되어있으면 배열추가
-					if(days.contains(num)) {
-						dates.add(df.format(currentDate));
-						cal.add(Calendar.DAY_OF_MONTH, 1);
-						currentDate = cal.getTime();
-					//다르면 다른날로 넘김
-					}else {
-						cal.add(Calendar.DAY_OF_MONTH, 1);
-						currentDate = cal.getTime();
-					}
-				}
-				
-				for (int j = 0; j < dates.size(); j++) {
-					//dto에 날짜와 파라미터를 담는다
-					List<CalendarDto> list = new ArrayList<CalendarDto>();
-					dto.setSeq_class(seq_class);
-					dto.setNickname(nickname);
-					dto.setTitle(title);
-					dto.setCdate(dates.get(j));
-					list.add(dto);
-					
-					//System.out.println("list>>>>>>>>>" + list.toString());
-					Map<String, Object> map = new HashMap<>();
-					map.put("list", list);
-					for(CalendarDto dto1 : list) {
-			            service.writeCalendar(dto1);
-			        }
-				}
+		while (currentDate.compareTo(d2) <= 0){
+			cal.setTime(currentDate);
+			int num = cal.get(Calendar.DAY_OF_WEEK);
+		
+			//시작날이 여러 수업요일에 포함되어있는가? 포함되어있으면 배열추가
+			if(days.contains(num)) {
+				dates.add(df.format(currentDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				currentDate = cal.getTime();
+			//다르면 다른날로 넘김
+			}else {
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				currentDate = cal.getTime();
 			}
-		}else {
-			char car = cday.charAt(0);
-			
-			int day = CalendarUtil.Switch(car);
-			
-			Calendar cal = Calendar.getInstance();
-			DateFormat df = new SimpleDateFormat("yyyyMMdd");
-			
-			//시작일, 끝일
-			String StartDate = cdate3;
-			String EndDate = cdate4;
-			
-			Date d1 = df.parse(StartDate);
-			Date d2 = df.parse(EndDate);
-			
-			//날짜들을 담을 배열
-			ArrayList<String> dates = new ArrayList<String>();
-			
-			Date currentDate = d1;
-			
-			while (currentDate.compareTo(d2) <= 0){
-				cal.setTime(currentDate);
-				int num = cal.get(Calendar.DAY_OF_WEEK);
-				//시작날이 수업요일와 같은가? 같으면 배열추가
-				if(num == day) {
-					dates.add(df.format(currentDate));
-					cal.add(Calendar.DAY_OF_MONTH, 1);
-					currentDate = cal.getTime();
-				//다르면 다른날로 넘김
-				}else {
-					cal.add(Calendar.DAY_OF_MONTH, 1);
-					currentDate = cal.getTime();
-				}
-			}
-					  	
-			for (int i = 0; i < dates.size(); i++) {
-				//dto에 날짜와 파라미터를 담는다
-				List<CalendarDto> list = new ArrayList<CalendarDto>();
-				dto.setSeq_class(seq_class);
-				dto.setNickname(nickname);
-				dto.setTitle(title);
-				dto.setCdate(dates.get(i));
-				list.add(dto);
-				
-				//System.out.println("list>>>>>>>>>" + list.toString());
-				Map<String, Object> map = new HashMap<>();
-				map.put("list", list);
-				for(CalendarDto dto1 : list) {
-		            service.writeCalendar(dto1);
-		        }
-			}	
 		}
-		return "calist.tiles";	
+		
+		List<CalendarDto> list = new ArrayList<CalendarDto>();
+		
+		for (int j = 0; j < dates.size(); j++) {
+			//dto에 날짜와 파라미터를 담는다
+			CalendarDto tempDto = new CalendarDto();
+			tempDto.setSeq_class(seq_class);
+			tempDto.setNickname(nickname);
+			tempDto.setTitle(title);
+			tempDto.setCdate(dates.get(j));
+			list.add(tempDto);
+		}	
+		
+		System.out.println("list>>>>>>>>>" + list.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		for(CalendarDto dto1 : list) {
+	        service.writeCalendar(dto1);		
+		}
+		
+		return "calist.tiles";
 	}
 	
 	@RequestMapping(value="deleteCalendar.do", method = RequestMethod.GET)
@@ -245,7 +213,7 @@ public class CalendarController {
 	@RequestMapping(value = "updateCalendar.do", method= {RequestMethod.GET, RequestMethod.POST})
 	public void updateCalendar(Model model, CalendarDto dto,
 							@RequestParam("seq_class") int seq_class,
-							/* @RequestParam("nickname") String nickname, */
+							@RequestParam("nickname") String nickname,
 							@RequestParam("title") String title, //바뀐 제목
 							@RequestParam("cdate1") String cdate1,
 							@RequestParam("cdate2") String cdate2,
@@ -255,8 +223,12 @@ public class CalendarController {
 		
 		dto.setSeq_class(seq_class);
 		
-		service.deleteCalendar(dto);
+		//이 클래스에 참여한 모든 캘린더 정보를 삭제한다
+		service.deleteMemberCal(seq_class);
 		
+		//참여한 사람들의 닉네임을 불러온다
+		List<String> list2 = service2.getCMNickname(seq_class);
+					
 		//날짜 형식 바꾸기 ex)2021-09-03 -> 20210903 
 		//시작날
 		String yyyy1 = cdate1.substring(0, 4);
@@ -270,112 +242,89 @@ public class CalendarController {
 		String dd2 = cdate2.substring(8, 10);
 		String cdate4 = yyyy2+ mm2 + dd2;
 		
-		if(cday.length() > 1) {
-			char[] array_word = new char[cday.length()];
-			for(int i=0; i<array_word.length; i++){ 
-				array_word[i]=(cday.charAt(i));//스트링을 한글자씩 끊어 배열에 저장
-				
-				List<Integer> days = new ArrayList<Integer>(); //
-				days.add(CalendarUtil.Switch(array_word[i]));
-				
-				Calendar cal = Calendar.getInstance();
-				DateFormat df = new SimpleDateFormat("yyyyMMdd");
-				
-				String StartDate = cdate3;
-				String EndDate = cdate4;
-				
-				Date d1 = df.parse(StartDate);
-				Date d2 = df.parse(EndDate);
-				
-				ArrayList<String> dates = new ArrayList<String>();
-				
-				Date currentDate = d1;
-				
-				while (currentDate.compareTo(d2) <= 0){
-					cal.setTime(currentDate);
-					int num = cal.get(Calendar.DAY_OF_WEEK);
-				
-					//시작날이 여러 수업요일에 포함되어있는가? 포함되어있으면 배열추가
-					if(days.contains(num)) {
-						dates.add(df.format(currentDate));
-						cal.add(Calendar.DAY_OF_MONTH, 1);
-						currentDate = cal.getTime();
-					//다르면 다른날로 넘김
-					}else {
-						cal.add(Calendar.DAY_OF_MONTH, 1);
-						currentDate = cal.getTime();
-					}
-				}
-				
-				for (int j = 0; j < dates.size(); j++) {
-					//dto에 날짜와 파라미터를 담는다
-					List<CalendarDto> list = new ArrayList<CalendarDto>();
-					dto.setSeq_class(seq_class);
-					/* dto.setNickname(nickname); */
-					dto.setTitle(title);
-					dto.setCdate(dates.get(j));
-					list.add(dto);
-					
-					//System.out.println("list>>>>>>>>>" + list.toString());
-					Map<String, Object> map = new HashMap<>();
-					map.put("list", list);
-					for(CalendarDto dto1 : list) {
-			            service.writeCalendar(dto1);
-			        }
-				}
+		//날짜들을 담을 배열
+		ArrayList<String> dates = new ArrayList<String>();
+		
+		//요일을 한글자씩 담을 배열
+		char[] array_word = new char[cday.length()];
+		
+		//요일을 숫자로 변환하여 담을 배열
+		List<Integer> days = new ArrayList<Integer>();
+		
+		for(int i=0; i<array_word.length; i++){ 
+			array_word[i]=(cday.charAt(i));	//요일을 한글자씩 배열에 저장
+			
+			days.add(CalendarUtil.Switch(array_word[i])); //한글자씩 구분하여 숫자로 변화하여 담는다
+		}	
+		//System.out.println("days" + days.toString());
+		
+		Calendar cal = Calendar.getInstance();				
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		
+		String StartDate = cdate3;
+		String EndDate = cdate4;
+		
+		Date d1 = df.parse(StartDate);
+		Date d2 = df.parse(EndDate);
+		
+		//ArrayList<String> dates = new ArrayList<String>();
+		
+		Date currentDate = d1;
+		
+		while (currentDate.compareTo(d2) <= 0){
+			cal.setTime(currentDate);
+			int num = cal.get(Calendar.DAY_OF_WEEK);
+		
+			//시작날이 여러 수업요일에 포함되어있는가? 포함되어있으면 배열추가
+			if(days.contains(num)) {
+				dates.add(df.format(currentDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				currentDate = cal.getTime();
+			//다르면 다른날로 넘김
+			}else {
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				currentDate = cal.getTime();
 			}
-		}else {
-			char car = cday.charAt(0);
-			
-			int day = CalendarUtil.Switch(car);
-			
-			Calendar cal = Calendar.getInstance();
-			DateFormat df = new SimpleDateFormat("yyyyMMdd");
-			
-			//시작일, 끝일
-			String StartDate = cdate3;
-			String EndDate = cdate4;
-			
-			Date d1 = df.parse(StartDate);
-			Date d2 = df.parse(EndDate);
-			
-			//날짜들을 담을 배열
-			ArrayList<String> dates = new ArrayList<String>();
-			
-			Date currentDate = d1;
-			
-			while (currentDate.compareTo(d2) <= 0){
-				cal.setTime(currentDate);
-				int num = cal.get(Calendar.DAY_OF_WEEK);
-				//시작날이 수업요일와 같은가? 같으면 배열추가
-				if(num == day) {
-					dates.add(df.format(currentDate));
-					cal.add(Calendar.DAY_OF_MONTH, 1);
-					currentDate = cal.getTime();
-				//다르면 다른날로 넘김
-				}else {
-					cal.add(Calendar.DAY_OF_MONTH, 1);
-					currentDate = cal.getTime();
-				}
-			}
-					  	
-			for (int i = 0; i < dates.size(); i++) {
-				//dto에 날짜와 파라미터를 담는다
-				List<CalendarDto> list = new ArrayList<CalendarDto>();
-				dto.setSeq_class(seq_class);
-				/* dto.setNickname(nickname); */
-				dto.setTitle(title);
-				dto.setCdate(dates.get(i));
-				list.add(dto);
-				
-				//System.out.println("list>>>>>>>>>" + list.toString());
-				Map<String, Object> map = new HashMap<>();
-				map.put("list", list);
-				for(CalendarDto dto1 : list) {
-		            service.writeCalendar(dto1);
-		        }
-			}	
 		}
+		//System.out.println("dates>>>>>>>>>>" + dates.toString());
+		
+		//닉네임과 각요일을 dto에 담는다
+	    List<CalendarDto> list = new ArrayList<CalendarDto>();
+	    
+		for(int n = 0; n < list2.size(); n++) { //1
+			for (int j = 0; j < dates.size(); j++) {	//10
+				CalendarDto tempDto = new CalendarDto();
+				tempDto.setSeq_class(seq_class);
+				tempDto.setNickname(list2.get(n));
+				tempDto.setTitle(title);
+				tempDto.setCdate(dates.get(j));
+				list.add(tempDto);
+				//System.out.println("list>>>>>>>>>" + list.get(0).toString());
+				//System.out.println("list>>>>>>>>>" + list.toString());	
+			}
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		for(CalendarDto dto1 : list) {
+            service.writeCalendar(dto1);
+        }
+		
+		List<CalendarDto> list3 = new ArrayList<CalendarDto>();
+		
+		for (int j = 0; j < dates.size(); j++) {	//10
+			CalendarDto tempDto = new CalendarDto();
+			tempDto.setSeq_class(seq_class);
+			tempDto.setNickname(nickname);
+			tempDto.setTitle(title);
+			tempDto.setCdate(dates.get(j));
+			list3.add(tempDto);
+		}
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("list3", list3);
+		for(CalendarDto dto2 : list3) {
+            service.writeTeachCalendar(dto2);
+        }
+
 	}
 }
 

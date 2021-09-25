@@ -9,7 +9,7 @@ public class CsArrow {
 	}
 
 	public String getArrow(){
-		String rs = "<img src='./image/arrow.png' width='10px' height='10px'/>";
+		String rs = "<img src='./image/arrow.png' width='25px' height='25px'/>";
 		String nbsp = "&nbsp;&nbsp;&nbsp;&nbsp;";
 		
 		String ts = "";

@@ -25,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,9 +97,8 @@ public class MemberController {
 		return msg;
 	}
 
-	@ResponseBody
 	@RequestMapping(value = "loginAf.do",  method = {RequestMethod.GET, RequestMethod.POST})
-	public void loginAf(MemberDto dto, HttpServletRequest req, Model model, HttpServletResponse resp) throws Exception {
+	public String loginAf(MemberDto dto, HttpServletRequest req) {
 		log.info("MemberController loginAf() " + new Date());
 		
 		MemberDto login = service.login(dto);
@@ -107,21 +107,10 @@ public class MemberController {
 			req.getSession().setAttribute("login", login);
 			req.getSession().setMaxInactiveInterval(60 * 60 * 24);
 			
-			 resp.setContentType("text/html; charset=utf-8");
-		      PrintWriter out = resp.getWriter();
-		      out.println("<script>alert('로그인 성공하였습니다!'); location.href='home.do'; </script> ");
-		      out.close();
-		      out.flush();
-
-			
+			return "redirect:/home.do";
 		}else {
 			System.out.println("로그인 실패하였습니다");
-			      resp.setContentType("text/html; charset=utf-8");
-			      PrintWriter out = resp.getWriter();
-			      out.println("<script>alert('로그인 실패하였습니다'); location.href='login.do'; </script> ");
-			      out.close();
-			      out.flush();
-			
+			return "redirect:/login.do";
 		}
 		
 		
@@ -195,7 +184,7 @@ public class MemberController {
 				/* 인증번호(난수) 생성 */
 				Random random = new Random();
 				int checkNum = random.nextInt(888888) + 111111;
-				System.out.println(checkNum);
+				
 				/* 이메일 보내기 */
 				String setFrom = "yourrecipe202@gmail.com";
 				String toMail = email;
@@ -228,9 +217,13 @@ public class MemberController {
 				
 			}
 			
-			  
+			@RequestMapping(value="mypage_main.do", method = {RequestMethod.GET, RequestMethod.POST})
+			public String mypage_main()  {
+				log.info("MemberController mypage_main() " + new Date());
 			
-		
+			  return "mypage_main.tiles";
+			
+			}
 		
 		@RequestMapping(value="info.do", method = {RequestMethod.GET, RequestMethod.POST})
 		public String info(HttpSession session, Model model, HttpServletRequest request)  {
@@ -307,17 +300,30 @@ public class MemberController {
 		}
 		
 		@RequestMapping(value="info_delAf.do", method = {RequestMethod.GET, RequestMethod.POST})
-		public String info_updateAf(MemberDto mem, HttpSession session) throws Exception {
+		public String info_updateAf(HttpServletResponse resp,MemberDto mem, HttpSession session, String pwd, HttpServletRequest request) throws Exception {
 			log.info("MemberController info_delAf() " + new Date());
-
 			log.info("del전달정보" + mem);
+
+			//세션 객체 안에 있는 ID정보 저장
+			MemberDto login = (MemberDto)request.getSession().getAttribute("login");
+		    String id = login.getId();
+			
+			if(mem.getId() != id || mem.getPwd() != pwd) {
+				 resp.setContentType("text/html; charset=utf-8");
+			     PrintWriter out = resp.getWriter();
+				out.print("<script>alert('아이디 또는 비밀번호가 틀렸습니다!'); location.href='info_del.do'; </script> ");
+				out.close();
+			}else {
 			
 		service.deletemember(mem);
-		
 		// 세션초기화
 		session.invalidate();
 		
+		
+			}
+		
 		return "home.tiles";
+		
 		
 
 		
@@ -337,11 +343,7 @@ public class MemberController {
 		
 		
 		
-		
-		
-		
-		
-		
+	
 		
 		
 		

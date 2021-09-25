@@ -182,6 +182,24 @@ public class AdServiceImpl implements AdService{
 		return dao.getMarketCount(ad);
 	}
 
+	@Override
+	public List<RecipeDto> recipeexcellist() {
+		// TODO Auto-generated method stub
+		return dao.recipeexcellist();
+	}
+
+	@Override
+	public List<CCDto> ccexcellist() {
+		// TODO Auto-generated method stub
+		return dao.ccexcellist();
+	}
+
+	@Override
+	public List<MarketDto> marketexcellist() {
+		// TODO Auto-generated method stub
+		return dao.marketexcellist();
+	}
+
 
 	
 

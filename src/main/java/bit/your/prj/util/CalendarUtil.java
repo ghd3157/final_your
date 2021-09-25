@@ -29,17 +29,31 @@ public class CalendarUtil {
 		str += "<col width='100px'/>";
 		
 		for(CalendarDto dto : list) {
-			if(dto.getCdate().substring(0, 8).equals(dates)) {
-				str += "<tr>";
-				str += "<td>";
-				str += "<a href='ccdetail.do?seq=" + dto.getSeq_class() + "'>";
-				str += "<font style='font-size:16px;color:black;text-decoration: none;'>";
-				str += dot3(dto.getTitle());
-				str += "</font>";
-				str += "</a>";
-				str += "</td>";
-				str += "</tr>";
-			}			
+			if(dto.getAuth() == 0) {
+				if(dto.getCdate().substring(0, 8).equals(dates)) {
+					str += "<tr>";
+					str += "<td>";
+					str += "<a href='ccdetail.do?seq=" + dto.getSeq_class() + "'>";
+					str += "<font style='font-size:16px;color:brown;text-decoration: none;'>";
+					str += dot3(dto.getTitle());
+					str += "</font>";
+					str += "</a>";
+					str += "</td>";
+					str += "</tr>";
+				}			
+			}else {
+				if(dto.getCdate().substring(0, 8).equals(dates)) {
+					str += "<tr>";
+					str += "<td>";
+					str += "<a href='ccdetail.do?seq=" + dto.getSeq_class() + "'>";
+					str += "<font style='font-size:16px;color:orange;text-decoration: none;'>";
+					str += dot3(dto.getTitle());
+					str += "</font>";
+					str += "</a>";
+					str += "</td>";
+					str += "</tr>";
+				}		
+			}
 		}
 		
 		str += "</table>";

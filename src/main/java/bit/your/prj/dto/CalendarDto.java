@@ -32,12 +32,13 @@ public class CalendarDto implements Serializable{
 	private String title;
 	private String rdate;
 	private String cdate;
+	private int auth;
 	
 	public CalendarDto() {
 		super();
 	}
 
-	public CalendarDto(int seq, String nickname, int seq_class, String title, String rdate, String cdate) {
+	public CalendarDto(int seq, String nickname, int seq_class, String title, String rdate, String cdate, int auth) {
 		super();
 		this.seq = seq;
 		this.nickname = nickname;
@@ -45,6 +46,7 @@ public class CalendarDto implements Serializable{
 		this.title = title;
 		this.rdate = rdate;
 		this.cdate = cdate;
+		this.auth = auth;
 	}
 
 	public CalendarDto(String nickname, int seq_class, String title, String cdate) {
@@ -103,10 +105,18 @@ public class CalendarDto implements Serializable{
 		this.cdate = cdate;
 	}
 
+	public int getAuth() {
+		return auth;
+	}
+
+	public void setAuth(int auth) {
+		this.auth = auth;
+	}
+
 	@Override
 	public String toString() {
 		return "CalendarDto [seq=" + seq + ", nickname=" + nickname + ", seq_class=" + seq_class + ", title=" + title
-				+ ", rdate=" + rdate + ", cdate=" + cdate + "]";
+				+ ", rdate=" + rdate + ", cdate=" + cdate + ", auth=" + auth + "]";
 	}
 	
 }

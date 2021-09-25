@@ -22,10 +22,14 @@ public interface CCService {
 	
 	boolean updateCC(CCDto dto);
 	
+	List<Integer> getNowCC(CCDto dto);
+	
 	boolean enterCM(CMDto dto);
 	
 	List<CMDto> getCM(int seq_class);
 	List<Map<String, Object>> getNickNameCM(String nickname);
+	
+	List<String> getCMNickname(int seq_class);
 	
 	void resignCM(CMDto dto);	
 	

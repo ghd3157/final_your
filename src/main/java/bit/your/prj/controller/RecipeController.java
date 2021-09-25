@@ -97,23 +97,24 @@ public class RecipeController {
 			return "redirect:/recipe.do";
 	}
 
-		@ResponseBody
-	   @RequestMapping(value="contentImageSend.do", method = RequestMethod.POST)
+	   @ResponseBody
+	   @RequestMapping(value="contentImageSend.do", method={RequestMethod.GET, RequestMethod.POST})
 	   public void contentImageSend(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	   response.setContentType("text/html;charset=utf-8");
 	      PrintWriter out = response.getWriter();
 	      // 업로드할 폴더 경로
 	      String realFolder = request.getSession().getServletContext().getRealPath("/upload/contentImage");
-	   
+	      
+	      System.out.println("업로드경로 : " + realFolder);
 	      // 업로드할 파일 이름
 	      String org_filename = file.getOriginalFilename();
 	      String str_filename = PdsUtil.getNewFileName(org_filename);
 	   
-	   //   System.out.println("원본 파일명 : " + org_filename);
-	   //   System.out.println("저장할 파일명 : " + str_filename);
+	      System.out.println("원본 파일명 : " + org_filename);
+	      System.out.println("저장할 파일명 : " + str_filename);
 	   
-	      String filepath = realFolder + "\\"+ str_filename;
-	   //   System.out.println("파일경로 : " + filepath);
+	      String filepath = realFolder + "/"+ str_filename;
+	      System.out.println("파일경로 : " + filepath);
 	   
 	      File f = new File(filepath);
 	      if (!f.exists()) {

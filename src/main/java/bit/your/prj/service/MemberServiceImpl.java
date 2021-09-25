@@ -77,7 +77,13 @@ public class MemberServiceImpl implements MemberService {
 	
 		
 	}
-
+	@Override
+	public int updatepwd(MemberDto mem) throws Exception {
+		return dao.updatepwd(mem);
+		
+	}
+	
+	
 
 	@Override
 	public void deletemember(MemberDto mem) {
@@ -149,15 +155,15 @@ public class MemberServiceImpl implements MemberService {
 			out.print("등록되지 않은 아이디입니다.");
 			out.close();
 		}
-		// 가입된 이메일이 아니면
-		else if(!dto.getEmail().equals(mem.getEmail())) {
-			out.print("등록되지 않은 이메일입니다.");
-			out.close();
-		}
 		// 가입된 이름이 아니면
-		else if(!dto.getName().equals(mem.getName())) {
-			out.print("등록된 이름이 아닙니다.");
-			out.close();	
+				else if(!dto.getName().equals(mem.getName())) {
+					out.print("등록된 이름이 아닙니다.");
+					out.close();
+		}
+		// 가입된 이메일이 아니면
+				else if(!dto.getEmail().equals(mem.getEmail())) {
+					out.print("등록되지 않은 이메일입니다.");
+					out.close();
 		}else {
 			// 임시 비밀번호 생성
 			String pw = "";
@@ -205,6 +211,12 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDto getMember(String id) {
 		return dao.getMember(id);
 	}
+
+
+	
+
+
+	
 
 
 

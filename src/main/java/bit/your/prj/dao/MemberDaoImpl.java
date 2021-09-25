@@ -48,11 +48,10 @@ public class MemberDaoImpl implements MemberDao {
 
 
 	@Override
-	public int updatepwd(MemberDto mem) throws Exception {
-		return session.update(ns + "updatepwd", mem);
+	public int updatepwd(MemberDto dto) throws Exception {
+		return session.update(ns + "updatepwd", dto);
 	}
-
-
+	
 	@Override
 	public MemberDto readmember(String id) throws Exception {
 		return session.selectOne(ns + "readmember", id);
@@ -96,6 +95,12 @@ public class MemberDaoImpl implements MemberDao {
 	public MemberDto getMember(String id) {
 		return session.selectOne(ns+"getMember",id);
 	}
+
+
+	
+
+
+
 
 	/////////////////////////////////////////////
 	

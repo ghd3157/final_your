@@ -45,15 +45,17 @@ public interface AdService {
 	
 	List<RecipeDto> allrecipelist(Param ad);
 	int getRecipeCount(Param ad);
+	List<RecipeDto> recipeexcellist();
 
 	
 	List<CCDto> allclasslist(Param ad);
 	int getClassCount(Param ad);
-	
+	List<CCDto> ccexcellist();
 	
 	List<MarketDto> allmarketlist(Param ad);
 	int getMarketCount(Param ad);
-	
+	List<MarketDto> marketexcellist();
+
 	
 }
 

@@ -64,6 +64,11 @@ public class CCDaoImpl implements CCDao{
 	}
 	
 	@Override
+	public List<Integer> getNowCC(CCDto dto) {
+		return session.selectList(ns + "getNowCC", dto);
+	}
+
+	@Override
 	public boolean enterCM(CMDto dto) {
 		int n = session.insert(ns + "enterCM", dto);
 		return n>0?true:false;
@@ -78,7 +83,12 @@ public class CCDaoImpl implements CCDao{
 	public List<Map<String, Object>> getNickNameCM(String nickname) {
 		return session.selectList(ns + "getNickNameCM", nickname);
 	}
-
+	
+	@Override
+	public List<String> getCMNickname(int seq_class) {
+		return session.selectList(ns + "getCMNickname", seq_class);
+	}
+	
 	@Override
 	public void resignCM(CMDto dto) {
 		session.delete(ns + "resignCM", dto);
