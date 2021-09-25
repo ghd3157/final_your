@@ -20,6 +20,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/modal2.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         
         <script type="text/javascript">
@@ -66,6 +67,34 @@
         </script>
         
         <script type="text/javascript">
+		function addCart(item,num) {
+			var count = $('#p_num'+num+'').val();
+			var itemnum = item;
+			//alert(count);
+			var allData = {"itemnum": itemnum, "count":count};
+	        
+		    $.ajax({
+		        url:"addcart2.do",
+		        type: "GET",
+		        data: allData,
+		        success:function(data){
+		        	alert("장바구니에 추가 됐습니다");
+		        	//장바구니 카운트 증가
+		        	var num = document.getElementById('CC').innerHTML;
+		        	var num2 = parseInt(num) + 1;
+		        	document.getElementById('CC').innerHTML = num2;
+		        	$('.modal').hide();
+		        },
+		        error:function(){
+		            alert("에러 발생");
+		            self.close();
+		     	}
+		   }); 	
+			
+		}
+		</script>
+        
+        <script type="text/javascript">
         $(document).ready(function () {
         	
 			$('#btn_cart').click(function () {
@@ -82,9 +111,11 @@
 			        data: allData,
 			        success:function(data){
 			        	alert("장바구니에 추가 됐습니다");
-			        	location.reload(true); 
-			        	window.opener.location.reload();
-			        	self.close();
+			        	//장바구니 카운트 증가
+			        	var num = document.getElementById('CC').innerHTML;
+			        	var num2 = parseInt(num) + 1;
+			        	document.getElementById('CC').innerHTML = num2;
+			        	
 			        },
 			        error:function(jqXHR, textStatus, errorThrown){
 			            alert("에러 발생~~ \n" + textStatus + " : " + errorThrown);
@@ -102,16 +133,9 @@
         
     </head>
     <body>
-    	<div align="center" style="height: 100px">
-    		<a href="home.do">메인으로 이동</a><br>
-    		<a href="marketmain.do">상품페이지 메인으로 이동</a><br>
-    		<a href="marketwrite.do">상품등록</a><br>
-    		<a href="order.do">결제완료 목록</a>
-    	</div>
-    	<div align="right">회원가입/로그인</div>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
+            <div class="container px-4 px-lg-5" style="font-size: 18px;">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -132,14 +156,14 @@
 	                                <img src="./image/fruit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
 	                                과일</a>
                                 </li>
-                                <li><a class="dropdown-item" href="'marketlist.do?canum=5'">
+                                <li><a class="dropdown-item" href="marketlist.do?canum=5">
                                 	<img src="./image/kit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
                                 	밀키트</a>
                                 </li>
                             </ul>
                         </li>&nbsp;&nbsp;&nbsp;&nbsp;
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="newMarketList.do">신상품</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <li class="nav-item"><a class="nav-link" href="#!">베스트</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <li class="nav-item"><a class="nav-link" href="best.do">베스트</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                         <li class="nav-item"><a class="nav-link" href="#!">할인/특가</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                     </ul>
                     <form class="d-flex" action="getSearchList.do">
@@ -147,10 +171,10 @@
 					    <button class="btn btn-outline-success" type="button" id="btnSearch">Search</button>
 				    </form>&nbsp;&nbsp;&nbsp;&nbsp;
                     <form class="d-flex" action="goCart.do">
-                        <button class="btn btn-outline-dark" type="submit">
+                        <button class="btn btn-outline-success" type="submit">
                             <i class="bi-cart-fill me-1"></i>
                             장바구니
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">${cartCount}</span>
+                            <span class="badge bg-warning text-white ms-1 rounded-pill" id="CC">${cartCount}</span>
                         </button>
                     </form>
                 </div>
@@ -186,7 +210,7 @@
 						  	<a style="width: 150px;float: left;width: 150px;line-height: 20px;">수량</a>
 						  	<div class="updown">
 						  	<img alt="" src="./image/minus.png" style="width: 20px;" class="down">
-						  	<input readonly="readonly" " value="1" style="width: 35px; height:30px; text-align: center; border: 0px;" name="p_num1" id="p_num1" class="p_num">
+						  	<input readonly="readonly" value="1" style="width: 35px; height:30px; text-align: center; border: 0px;" name="p_num1" id="p_num1" class="p_num">
 						  	<img alt="" src="./image/plus.png" style="width: 20px;" class="up">
 						  	</div>
 						  </li>
@@ -196,7 +220,7 @@
 						<div class="sum" style="font-weight: bold; font-size: 20px; line-height: 20px;">${dto.price}원</div>
 						<br>
                         <div class="d-flex">
-                            <button class="btn btn-outline-dark flex-shrink-0" type="button" style="margin-left: 400px;" id="btn_cart">
+                            <button class="btn btn-outline-success flex-shrink-0" type="button" style="margin-left: 400px;" id="btn_cart">
                                 <i class="bi-cart-fill me-1"></i>
                                 장바구니 담기
                             </button>
@@ -216,7 +240,7 @@
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="./marketimage/${market.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${market.seq}'" />
+                            <img style="min-height: 100px; max-height: 300px;" class="card-img-top" src="./marketimage/${market.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${market.seq}'" />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -229,7 +253,31 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="">장바구니 담기</a></div>
+                                <div class="text-center"><!-- <a class="btn btn-outline-success btntt">장바구니 담기</a> --></div>
+					  			<%-- <div class="modal">
+						    		<div class="modal__overlay">
+							    		<div class="modal__content">
+								    		<div style="float: left;">${market.title}</div><br>
+								    		<div><span><fmt:formatNumber value="${market.price}" pattern="#,###,###"/>원</span>
+								    		<span class="updown" style="float: right;">
+											  	<img alt="" src="./image/minus.png" style="width: 20px;" class="down" onclick="javascript:basket.changePNum1('${i.count}');">
+											  	<input type="text" readonly="readonly" value="1" style="width: 35px; height:30px; text-align: center; border: 0px;"
+											  	 name="p_num${i.count}" id="best${i.count}" class="p_num" onkeyup="javascript:basket.changePNum1('${i.count}');">
+											  	<img alt="" src="./image/plus.png" style="width: 20px;" class="up" onclick="javascript:basket.changePNum1('${i.count}');">
+										  	</span>
+										  	</div>
+										  	<br>
+										  	<br>
+											<div class="sum" style="font-weight: bold; font-size: 20px; line-height: 20px;" >
+												<a style="width: 150px; margin-left: 60px;">총 상품 금액 :</a>
+												<input type="text" id="totalPriceA${i.count}" style="border: 0px; width: 100px; text-align: right; margin-left: 40px;" value="<fmt:formatNumber value="${market.price}" pattern="#,###,###" />" />원
+											</div>
+											<br>
+											<a type="button" style="float: left; margin-left: 50px; size: 50px;" class="btn btn-outline-danger close">취소</a>
+											<a type="button" style="float: right; margin-right: 30px;" class="btn btn-outline-success" onclick="addCart('${market.itemnum}','${i.count}');">장바구니 담기</a>
+		    							</div>
+	    							</div>
+ 			 					</div> --%>
                             </div>
                         </div>
                     </div>
@@ -246,9 +294,9 @@
 			</colgroup>
 		  	<tbody>
 			    <tr>
-			      <th scope="col" style="padding-right: 100px; text-align: center;">제목</th>
-			      <th scope="col" style="">작성자</th>
-			      <th scope="col" style="">작성일</th>
+			      <th style="padding-right: 100px; text-align: center; width:auto;">제목</th>
+			      <th style="width:120px;">작성자</th>
+			      <th style="width:130px;">작성일</th>
 			    </tr>
 			</tbody>
 		</table>
@@ -258,7 +306,7 @@
 			<colgroup>
 				<col style="width:auto;">
 				<col style="width:120px;">
-				<col style="width:120px;">
+				<col style="width:130px;">
 			</colgroup>
 				<tbody onclick="viewContent(${i.count})" >
 					<tr>
@@ -268,7 +316,7 @@
 				    <tr>
 				</tbody>
 			</table>
-				<div style="display:none; width: 70%; margin-left: auto; margin-right: auto; padding-top: 5px;" id="content${i.count}" >
+				<div style="display:none; width: 70%; margin-left: auto; margin-right: auto; padding-top: 5px; font-weight: bold;" id="content${i.count}" >
 					${review.content} 
 				</div>
 		</div>
@@ -346,7 +394,24 @@
         	        
         	        this.reCalc();
         	        this.updateUI();
-        	    }
+        	    },
+        	    
+        	    changePNum1: function (pos) {
+    		        var item = document.querySelector('input[id=best'+pos+']');
+    		        var p_num = parseInt(item.getAttribute('value'));
+    		        var newval = event.target.classList.contains('up') ? p_num+1 : event.target.classList.contains('down') ? p_num-1 : event.target.value;
+    		        
+    		        if (parseInt(newval) < 1 || parseInt(newval) > 99) { return false; }
+
+    		        item.setAttribute('value', newval);
+    		        item.value = newval;
+
+    		        var price = $('#bestPrice'+pos+'').val();
+    		        var totalPrice = (newval * price);
+    		        $('input[id=totalPriceA'+pos+']').attr('value',totalPrice.formatNumber());
+    				//console.log("bestPrice>>>>"+price);
+    		        
+    		    }
         	}
          
          		Number.prototype.formatNumber = function(){
@@ -357,6 +422,49 @@
 	        	    return nstr;
         	};
         </script>
+        
+        <!-- 모달창 -->
+		<!-- <script type="text/javascript">
+			
+			// Modal을 가져온다
+			var modals = document.getElementsByClassName("modal");
+			// Modal을 띄우는 클래스 이름을 가져온다.
+			var btns = document.getElementsByClassName("btntt");
+			// Modal을 닫는 close 클래스를 가져온다.
+			var spanes = document.getElementsByClassName("close");
+			var funcs = [];
+			
+			// Modal을 띄우고 닫는 클릭 이벤트를 정의한 함수
+			function Modal(num) {
+				return function(){
+					// 해당 클래스의 내용을 클릭하면 Modal을 띄운다.
+					btns[num].onclick = function(){
+						modals[num].style.display = "block";
+						//console.log(num);
+					};
+					
+					// 닫기 버튼 클릭하면 Modal이 닫힌다.
+					spanes[num].onclick = function() {
+						modals[num].style.display = "none";
+					};
+				};
+			}
+			// 원하는 Modal 수만큼 Modal 함수를 호출해서 funcs 함수에 정의한다.
+			for(var i = 0; i< btns.length; i++){
+				funcs[i] = Modal(i);
+			}
+			// 원하는 Modal 수만큼 funcs 함수를 호출한다.
+			for(var j = 0; j< btns.length; j++){
+				funcs[j]();
+			}
+			// Modal 영역 밖을 클릭하면 Modal을 닫는다.
+			window.onclick = function(event) {
+				if(event.target.className == "modal"){
+					event.target.style.display = "none";	
+				}
+			};
+		
+		</script> -->
     </body>
 </html>
 

@@ -18,6 +18,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/modal2.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript">
         $(document).ready(function() {
@@ -52,18 +53,39 @@
         });
         </script>
         
+        <script type="text/javascript">
+		function addCart(item,num) {
+			var count = $('#p_num'+num+'').val();
+			var itemnum = item;
+			//alert(count);
+			var allData = {"itemnum": itemnum, "count":count};
+	        
+		    $.ajax({
+		        url:"addcart2.do",
+		        type: "GET",
+		        data: allData,
+		        success:function(data){
+		        	alert("장바구니에 추가 됐습니다");
+		        	//장바구니 카운트 증가
+		        	var num = document.getElementById('CC').innerHTML;
+		        	var num2 = parseInt(num) + 1;
+		        	document.getElementById('CC').innerHTML = num2;
+		        	$('.modal').hide();
+		        },
+		        error:function(){
+		            alert("에러 발생");
+		            self.close();
+		     	}
+		   }); 	
+			
+		}
+		</script>
+        
     </head>
     <body>
-    	<div align="center" style="height: 100px">
-    		<a href="home.do">메인으로 이동</a><br>
-    		<a href="marketmain.do">상품페이지 메인으로 이동</a><br>
-    		<a href="marketwrite.do">상품등록</a><br>
-    		<a href="order.do">결제완료 목록</a>
-    	</div>
-    	<div align="right">회원가입/로그인</div>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
+            <div class="container px-4 px-lg-5" style="font-size: 18px;">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -84,14 +106,14 @@
 	                                <img src="./image/fruit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
 	                                과일</a>
                                 </li>
-                                <li><a class="dropdown-item" href="'marketlist.do?canum=5'">
+                                <li><a class="dropdown-item" href="marketlist.do?canum=5">
                                 	<img src="./image/kit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
                                 	밀키트</a>
                                 </li>
                             </ul>
                         </li>&nbsp;&nbsp;&nbsp;&nbsp;
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="newMarketList.do">신상품</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <li class="nav-item"><a class="nav-link" href="#!">베스트</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <li class="nav-item"><a class="nav-link" href="best.do">베스트</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                         <li class="nav-item"><a class="nav-link" href="#!">할인/특가</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                     </ul>
                     <form class="d-flex" action="getSearchList.do">
@@ -99,25 +121,19 @@
 					    <button class="btn btn-outline-success" type="button" id="btnSearch">Search</button>
 				    </form>&nbsp;&nbsp;&nbsp;&nbsp;
                     <form class="d-flex" action="goCart.do">
-                        <button class="btn btn-outline-dark" type="submit">
+                        <button class="btn btn-outline-success" type="submit">
                             <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">${cartCount}</span>
+                            장바구니
+                            <span class="badge bg-warning text-white ms-1 rounded-pill" id="CC">${cartCount}</span>
                         </button>
                     </form>
                 </div>
             </div>
         </nav>
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white"> <!-- 광고 사진 링크 걸어둘곳 -->
-                    <h1 class="display-4 fw-bolder">광고 사진</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">광고 서브 문구</p>
-                </div>
-            </div>
+       <!-- Header-->
+        <header class="bg-white py-5">
+           <img alt="" src="./marketimage/fruitbaner.png">
         </header>
-        
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
@@ -126,21 +142,44 @@
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="./marketimage/${list.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${list.seq}'"/>
+                            <img style="min-height: 100px; max-height: 300px;" class="card-img-top" src="./marketimage/${list.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${list.seq}'"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
                                     <h5 class="fw-bolder" onclick="location.href='marketdetail.do?seq=${list.seq}'">${list.title}</h5>
                                     <!-- Product price-->
-                                    ${ca.price}원<br>
+                                    ${list.price}원<br>
                                     <a style="font-size: 12px; color: gray;">${list.subtitle}</a>
                                 </div>
                             </div>
                             <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">장바구니 담기</a></div>
-                            </div>
+                            <div class="text-center"><a class="btn btn-outline-success btntt">장바구니 담기</a></div>
+					  			<div class="modal">
+						    		<div class="modal__overlay">
+							    		<div class="modal__content">
+								    		<div style="float: left; font-size: 16px;">${list.title}</div><br>
+								    		<div><span><fmt:formatNumber value="${list.price}" pattern="#,###,###"/>원</span>
+								    		<input type="hidden" id="price${i.count}" value="${list.price}">
+								    		<span class="updown" style="float: right;">
+											  	<img alt="" src="./image/minus.png" style="width: 20px;" class="down" onclick="javascript:basket.changePNum('${i.count}');">
+											  	<input type="text" readonly="readonly" value="1" style="width: 35px; height:30px; text-align: center; border: 0px;"
+											  	 name="p_num${i.count}" id="p_num${i.count}" class="p_num" onkeyup="javascript:basket.changePNum('${i.count}');">
+											  	<img alt="" src="./image/plus.png" style="width: 20px;" class="up" onclick="javascript:basket.changePNum('${i.count}');">
+										  	</span>
+										  	</div>
+										  	<br>
+										  	<br>
+											<div class="sum" style="font-weight: bold; font-size: 20px; line-height: 20px;" >
+												<a style="width: 150px; margin-left: 60px;">총 상품 금액 :</a>
+												<input type="text" id="totalPrice${i.count}" style="border: 0px; width: 100px; text-align: right; margin-left: 40px;" value="<fmt:formatNumber value="${list.price}" pattern="#,###,###" />" />원
+											</div>
+											<br>
+											<a type="button" style="float: left; margin-left: 50px; size: 50px;" class="btn btn-outline-danger close">취소</a>
+											<a type="button" style="float: right; margin-right: 30px;" class="btn btn-outline-success" onclick="addCart('${list.itemnum}','${i.count}');">장바구니 담기</a>
+		    							</div>
+	    							</div>
+ 			 					</div>
                         </div>
                     </div>
                     </c:forEach>
@@ -151,7 +190,98 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        
+        <!-- 모달창 -->
+		<script type="text/javascript">
+			
+			// Modal을 가져온다
+			var modals = document.getElementsByClassName("modal");
+			// Modal을 띄우는 클래스 이름을 가져온다.
+			var btns = document.getElementsByClassName("btntt");
+			// Modal을 닫는 close 클래스를 가져온다.
+			var spanes = document.getElementsByClassName("close");
+			var funcs = [];
+			
+			// Modal을 띄우고 닫는 클릭 이벤트를 정의한 함수
+			function Modal(num) {
+				return function(){
+					// 해당 클래스의 내용을 클릭하면 Modal을 띄운다.
+					btns[num].onclick = function(){
+						modals[num].style.display = "block";
+						console.log(num);
+					};
+					
+					// 닫기 버튼 클릭하면 Modal이 닫힌다.
+					spanes[num].onclick = function() {
+						modals[num].style.display = "none";
+					};
+				};
+			}
+			// 원하는 Modal 수만큼 Modal 함수를 호출해서 funcs 함수에 정의한다.
+			for(var i = 0; i< btns.length; i++){
+				funcs[i] = Modal(i);
+			}
+			// 원하는 Modal 수만큼 funcs 함수를 호출한다.
+			for(var j = 0; j< btns.length; j++){
+				funcs[j]();
+			}
+			// Modal 영역 밖을 클릭하면 Modal을 닫는다.
+			window.onclick = function(event) {
+				if(event.target.className == "modal"){
+					event.target.style.display = "none";	
+				}
+			};
+		
+		</script>
+		<script type="text/javascript">
+	let basket = {
+		    totalCount: 0, 
+		    totalPrice: 0,
+		    
+		    //개별 수량 변경
+		    changePNum: function (pos) {
+		        var item = document.querySelector('input[name=p_num'+pos+']');
+		        var p_num = parseInt(item.getAttribute('value'));
+		        var newval = event.target.classList.contains('up') ? p_num+1 : event.target.classList.contains('down') ? p_num-1 : event.target.value;
+		        
+		        if (parseInt(newval) < 1 || parseInt(newval) > 99) { return false; }
+
+		        item.setAttribute('value', newval);
+		        item.value = newval;
+
+		        var price = $('#price'+pos+'').val();
+		        //console.log("price>>>>"+price);
+		        var totalPrice = (newval * price);
+		        //console.log("totalPrice>>>>"+totalPrice);
+				$('input[id=totalPrice'+pos+']').attr('value',totalPrice.formatNumber());
+		        
+		    },
+		    changePNum1: function (pos) {
+		        var item = document.querySelector('input[id=best'+pos+']');
+		        var p_num = parseInt(item.getAttribute('value'));
+		        var newval = event.target.classList.contains('up') ? p_num+1 : event.target.classList.contains('down') ? p_num-1 : event.target.value;
+		        
+		        if (parseInt(newval) < 1 || parseInt(newval) > 99) { return false; }
+
+		        item.setAttribute('value', newval);
+		        item.value = newval;
+
+		        var price = $('#bestPrice'+pos+'').val();
+		        var totalPrice = (newval * price);
+		        $('input[id=totalPriceA'+pos+']').attr('value',totalPrice.formatNumber());
+				//console.log("bestPrice>>>>"+price);
+		        
+		    }
+		}
+
+		// 숫자 3자리 콤마찍기
+		Number.prototype.formatNumber = function(){
+		    if(this==0) return 0;
+		    let regex = /(^[+-]?\d+)(\d{3})/;
+		    let nstr = (this + '');
+		    while (regex.test(nstr)) nstr = nstr.replace(regex, '$1' + ',' + '$2');
+		    return nstr;
+		};
+	</script>
 
     </body>
 </html>

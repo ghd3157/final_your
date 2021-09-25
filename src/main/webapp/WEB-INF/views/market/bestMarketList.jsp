@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>MarketCaList</title>
+        <title>BestMarketCaList</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Bootstrap icons-->
@@ -71,7 +71,6 @@
 		</script>
         
     </head>
-    <body>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5" style="font-size: 18px;">
@@ -121,18 +120,18 @@
         </nav>
         <!-- Header-->
         <header class="bg-white py-5">
-	        <img alt="" src="./marketimage/mainbaner.png">
+	        <img alt="" src="./marketimage/subbaner.png">
         </header>
         
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-left">
-                    <c:forEach var="list" items="${newMarketList}" varStatus="i" >
+                    <c:forEach var="list" items="${bestmarketlist}" varStatus="i" >
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img  style="min-height: 100px; max-height: 300px;" class="card-img-top" src="./marketimage/${list.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${list.seq}'"/>
+                            <img style="min-height: 100px; max-height: 300px;" class="card-img-top" src="./marketimage/${list.newmainpt}" alt="..." onclick="location.href='marketdetail.do?seq=${list.seq}'"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">

@@ -14,7 +14,8 @@
 	<title>Cart</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/10-11.css" />
-	<link href="css/styles.css" rel="stylesheet" /> 
+	<link href="css/styles.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/nomal.css" /> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- 결제관련 -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
@@ -36,13 +37,13 @@
         $('#addr3').val(addr3); 
    });
     </script>
-	
- 	<script type="text/javascript">
-		$(document).ready(function() {
-			basket.reCalc();
-			basket.updateUI();
-		});
-	</script> 
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+    	basket.reCalc();
+    	basket.updateUI();
+    });
+    </script>
 	
 	<!-- 카테고리 드롭다운바 -->
 	<script type="text/javascript">
@@ -115,50 +116,62 @@ function execPostCode() {
 
 <script type="text/javascript">
 
-function delCart(data) {
-	
+function delCart(data,num) {
+	var num1 = num;
 	var seq = data;
 	
-	$.ajax({
+	 document.querySelectorAll('input[id=chk_id'+num+']').forEach(function (item) {
+         item.parentElement.parentElement.parentElement.remove();
+         basket.reCalc();
+         basket.updateUI();
+      });
+	
+	 $.ajax({
 		url:"delCart.do",
 		type:"GET",
 		data: {"seq":seq},
 		success:function(data){
 			//alert("삭제합니다");
-			location.reload(true); 
-			self.close();
 		},
 		error:function(){
 			alert("에러발생");
 			self.close();
 		}
-	});
+	}); 
 	
 }
 
-function countUp(count,seq) {
-	
+function countUp(count,seq,num) {
+	var fnum = num;
 	var allData = {"count":count, "seq":seq};
+	var rcount = $('input[id=p_num'+fnum+']').val();
+	//alert("rcount>>>>"+rcount);
+	var result = parseInt(rcount) + 1;
 	
 	$.ajax({
 		url:"countUp.do",
 		type:"GET",
 		data:allData,
-		success:function(data){
+		success:function(){
 			//alert("수량증가");
-			location.reload(true);
-			self.close();
+			//location.reload(true);
+			$('input[id=p_num'+fnum+']').attr('value',result);
+			basket.reCalc();
+			basket.updateUI();
 		},
 		error:function(){
 			alert("수량증가 에러발생");
-			self.close();
 		}
 	});
 }
 
-function countDown(count,seq){
+function countDown(count,seq,num){
 	
+	var fnum = num;
 	var allData = {"count":count, "seq":seq};
+	var rcount = $('input[id=p_num'+fnum+']').val();
+	//alert("rcount>>>>"+rcount);
+	var result = parseInt(rcount) - 1;
 	
 	$.ajax({
 		url:"countDown.do",
@@ -166,12 +179,13 @@ function countDown(count,seq){
 		data:allData,
 		success:function(data){
 			//alert("수량감소");
-			location.reload(true); 
-			self.close();
+			//location.reload(true); 
+			$('input[id=p_num'+fnum+']').attr('value',result);
+			basket.reCalc();
+			basket.updateUI();
 		},
 		error:function(){
 			alert("수량감소 에러발생");
-			self.close();
 		}
 	});
 }
@@ -179,9 +193,49 @@ function countDown(count,seq){
 </script>
 
 <script type="text/javascript">
+
+	function checkDel(){
+		
+		var Arr = [];
+		
+		
+		       document.querySelectorAll("input[name=buy]:checked").forEach(function (item) {
+		           item.parentElement.parentElement.parentElement.remove();
+		           console.log("cc>>>>"+item.value);
+		           Arr.push(item.value);
+		            
+		        });
+		       
+		       var dataList = Arr;
+		       console.log("dataList>>>>"+dataList);
+		        $.ajax({
+		    	  url:"checkdel.do",
+		    	  type:"POST",
+		    	  data: {dataList:dataList},
+		    	  dataType: "JSON",
+		    	  traditional: true ,
+					success:function(data){
+						console.log(data);
+					},
+					error : function() {
+						console.log('에러');
+					}
+		       }); 
+	 	};
+	
+</script>
+
+
+<script type="text/javascript">
 	function delAllItem(data) {
 		
 		var id = data
+		
+		document.querySelectorAll("input[name=buy]").forEach(function (item) {
+	           item.parentElement.parentElement.parentElement.remove();
+	           basket.reCalc();
+	           basket.updateUI();
+	        });
 		
 		$.ajax({
 			url:"delAllItem.do",
@@ -189,7 +243,6 @@ function countDown(count,seq){
 			data: {"id":id},
 			success:function(data){
 				//alert("delAllItem 성공");
-				location.reload(true); 
 				self.close();
 			},
 			error:function(){
@@ -209,10 +262,19 @@ function countDown(count,seq){
 		
 		$("#orderSubmit").click(function () {
 			
-			var len = $("input[name='buy']:checked").length;
+			var len = $("input[name='buy']:checked").length; //체크된 상품의 갯수 확인
+			
 			var IMP = window.IMP; // 생략가능
 			
-			
+	        var totalPrice = 0;
+			//클래스명이 p_num인 요소를 반복문으로 돌려서 체크됐는지 확인후 수량 가격 가져와 순회하며 totalPrice에 저장
+	        document.querySelectorAll(".p_num").forEach(function (item) {
+	            if(item.parentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild.checked == true){
+	                var count = parseInt(item.getAttribute('value'));
+	                var price = item.parentElement.parentElement.previousElementSibling.firstElementChild.getAttribute('value');
+	                totalPrice += count * price;
+	            }
+	        }, this);
 			
 			
 			IMP.init('imp30434795');
@@ -223,7 +285,7 @@ function countDown(count,seq){
 				pay_method: 'card',
 				merchant_uid: '${login.id.substring(0,2)}' + new Date().getTime(),
 				name: '${login.name}'+'님 상품'+len+'개',//결제창에서 보여질 이름
-				amount: $('#sumPrice').val() ,            //가격
+				amount: totalPrice ,            //가격
 				buyer_email: '${login.email}',
 				buyer_name: '${login.name}',
 				buyer_tel: '${login.phone}',
@@ -261,16 +323,18 @@ function countDown(count,seq){
 						success:function(data){
 							alert("데이터 넘기기 성공");
 							console.log(data);
-							location.reload(true); 
+							location.reload(true);
 						},
 						error : function() {
 							console.log('에러');
-							location.reload(true); 
+							location.reload(true);
+
 						}
 					});
 				} else {
 					var msg = '결제에 실패하였습니다.';
 					msg += '에러내용 : ' + rsp.error_msg;
+					location.reload(true);
 				}
 			});
 		});
@@ -282,13 +346,6 @@ function countDown(count,seq){
 
 </head>
 <body>
-    	<div align="center" style="height: 100px">
-    		<a>로고</a><br>
-    		<a href="marketmain.do">메인으로 이동</a><br>
-    		<a href="marketwrite.do">상품등록</a><br>
-    		<a href="marketwrite.do">상품등록</a><br>
-    		<a href="order.do">결제완료 목록</a>
-    	</div>
     	<div align="right">회원가입/로그인</div>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -313,7 +370,7 @@ function countDown(count,seq){
 	                                <img src="./image/fruit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
 	                                과일</a>
                                 </li>
-                                <li><a class="dropdown-item" href="'marketlist.do?canum=5'">
+                                <li><a class="dropdown-item" href="marketlist.do?canum=5">
                                 	<img src="./image/kit.png" alt="카테고리 아이콘" style="width: 24px; height: 24px;">
                                 	밀키트</a>
                                 </li>
@@ -328,10 +385,10 @@ function countDown(count,seq){
 					    <button class="btn btn-outline-success" type="button" id="btnSearch">Search</button>
 				    </form>&nbsp;&nbsp;&nbsp;&nbsp;
                     <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
+                        <button class="btn btn-outline-success" type="submit">
                             <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">${cartCount}</span>
+                            장바구니
+                            <span class="badge bg-warning text-white ms-1 rounded-pill" id="CC">${cartCount}</span>
                         </button>
                     </form>
                 </div>
@@ -339,7 +396,6 @@ function countDown(count,seq){
         </nav>
 
     <form name="orderform" id="orderform" method="post" class="orderform" action="/Page" onsubmit="return false;">
-    
             <div class="basketdiv" id="basket">
                 <div class="row head">
                     <div class="subdiv">
@@ -362,7 +418,7 @@ function countDown(count,seq){
         		<c:forEach var="list" items="${cartList}" varStatus="i" >
                 <div class="row data">
                     <div class="subdiv">
-                        <div class="check"><input type="checkbox" class="chk" name="buy" value="${list.seq}" checked="checked" onclick="basket.checkItem();">&nbsp;</div>
+                        <div class="check"><input type="checkbox" class="chk" id="chk_id${i.count}" name="buy" value="${list.seq}" checked="checked" onclick="basket.checkItem();">&nbsp;</div>
                         <div class="img"><img src="./marketimage/${list.mainpt}" width="60" onclick="location.href='marketdetail2.do?itemnum=${list.itemnum}'"></div>
                         <input type="hidden" value="${list.mainpt}" id="mainpt">
                         <input type="hidden" value="${list.title}" id="title">
@@ -372,15 +428,13 @@ function countDown(count,seq){
                         </div>
                     </div>
                     <div class="subdiv">
-                        <div class="basketprice"><input type="text" name="p_price" id="p_price${i.count}" class="p_price" value="${list.price}" style="border: 0px; text-align: center;" readonly="readonly"></div>
+                        <div class="basketprice"><input type="text" size="6" name="p_price" id="p_price${i.count}" class="p_price" value="${list.price}" style="border: 0px; text-align: center;" readonly="readonly"><a style="height: auto;">원</a></div>
                         <div class="num">
                             <div class="updown">
-                                <input type="text" name="p_num" id="p_num${i.count}" size="2" maxlength="4" class="p_num" value="${list.count}"  onkeyup="basket.changePNum(${i.count});"
+                                <input type="text" readonly="readonly" name="p_num${i.count}" id="p_num${i.count}" size="5" maxlength="4" class="p_num" value="${list.count}"  onkeyup="basket.changePNum(${i.count});"
                                 style="border: 0px;">
-                                <%-- <span onclick="basket.changePNum(${i.count});"><i class="fas fa-arrow-alt-circle-up up"></i></span>
-                                <span onclick="basket.changePNum(${i.count});"><i class="fas fa-arrow-alt-circle-down down"></i></span> --%>
-                                <span onclick="countUp('${list.count}','${list.seq}');"><i class="fas fa-arrow-alt-circle-up up"></i></span>
-                                <span onclick="countDown('${list.count}','${list.seq}');"><i class="fas fa-arrow-alt-circle-down down"></i></span>
+                                <span onclick="countUp('${list.count}','${list.seq}','${i.count}'), basket.changePNum('${i.count}');"><i class="fas fa-arrow-alt-circle-up up"></i></span>
+                                <span onclick="countDown('${list.count}','${list.seq}','${i.count}'), basket.changePNum('${i.count}');"><i class="fas fa-arrow-alt-circle-down down"></i></span>
                             </div>
                         </div>
                         
@@ -389,39 +443,37 @@ function countDown(count,seq){
                         <c:set var="row_sum" value="${row_sum + (list.price * list.count)}" />
                     </div>
                     <div class="subdiv">
-                         <div class="basketcmd"><a href="javascript:void(0)" class="abutton" onclick="delCart('${list.seq}');">삭제</a></div> 
+                         <div class="basketcmd"><a href="javascript:void(0)" class="abutton" onclick="delCart('${list.seq}','${i.count}');">삭제</a></div> 
                     </div>
                 </div>
                 </c:forEach>
             </div>
-    
-            <div class="right-align basketrowcmd">
-                <a href="javascript:void(0)" class="abutton" onclick="basket.delCheckedItem();">선택상품삭제</a>
+    		
+            <div class="right-align basketrowcmd" >
+                <a href="javascript:void(0)" class="abutton" onclick="checkDel();">선택상품삭제</a>
                 <a href="javascript:void(0)" class="abutton" onclick="delAllItem('${login.id}');">장바구니비우기</a>
             </div>
     		
-            <div class="bigtext right-align sumcount" id="sum_p_num">상품갯수: <c:out value="${row_count}"/>개</div>
-            <div class="bigtext right-align box blue summoney" id="sum_p_price">합계금액: <c:out value="${row_sum}"/>원</div>
+            <div class="bigtext right-align sumcount" id="sum_p_num" >상품갯수: <c:out value="${row_count}"/>개</div>
             <input type="hidden" id="sumPrice" value="${row_sum}">
+            <div class="bigtext right-align box blue summoney" id="sum_p_price">합계금액: <fmt:formatNumber value="${row_sum}" pattern="#,###,###"/>원</div>
+            
     
-    	<ul class="list-group list-group-flush" style="padding-left: 300px; padding-right: 300px; padding-bottom: 100px;">
-        	<li class="list-group-item">
-
-    		</li>
-			<li class="list-group-item">
+    		<ul class="writeTable" style="padding-left: 300px; padding-right: 300px; padding-bottom: 100px; border-radius: 15px;">
+			<li class="list-group-item" >
 				<a>주문자</a>	<a style="padding-left: 100px" id="userName">${login.name}</a>
     		</li>
-			<li class="list-group-item">
+			<li class="list-group-item" >
 				<a>휴대폰</a>	<a style="padding-left: 100px" id="userPhone">${login.phone}</a>
 			</li>
-			<li class="list-group-item">
+			<li class="list-group-item" >
 				<a>이메일</a>	<a style="padding-left: 100px" id="userEmail">${login.email}</a>
 			</li>
-			<li class="list-group-item">
+			<li class="list-group-item" >
 				<a style="padding-right: 100px;">배송지</a>	
 				<input id="addr1" size="3" value="" readonly="readonly" style="border: 0px;">
 				<input id="addr2" size="60" value="" readonly="readonly" style="border: 0px;">
-				<button type="button" id="Mod_Address" onclick="execPostCode();">배송지 변경</button>
+				<button  id="Mod_Address" onclick="execPostCode();" style="float: right; padding-bottom: 1.5px;" class="btn btn-outline-success">배송지 변경</button>
 				<br>
 				<a style="padding-right: 170px;"></a>
 				<input id="addr3" value="" placeholder="상세주소 입력" style="border: 0px;">
@@ -432,7 +484,7 @@ function countDown(count,seq){
 		<div id="goorder" class="">
 	        <div class="clear"></div>
 	        <div class="buttongroup center-align cmd">
-	            <button id="orderSubmit">결제하기</button>
+	            <button id="orderSubmit" class="button-slide-red">결제하기</button>
 	        </div>
     	</div>
 
@@ -442,18 +494,20 @@ function countDown(count,seq){
 		<script type="text/javascript">
 		let basket = {
 			    totalCount: 0, 
-			    totalPrice: 0,
+			    totalPrice: 0,			    
 			    //체크한 장바구니 상품 비우기
 			    delCheckedItem: function(){
 			        document.querySelectorAll("input[name=buy]:checked").forEach(function (item) {
 			            item.parentElement.parentElement.parentElement.remove();
+			            console.log(item.value);
+			            
 			        });
-			        //AJAX 서버 업데이트 전송
-			    
+			    	
 			        //전송 처리 결과가 성공이면
 			        this.reCalc();
 			        this.updateUI();
 			    },
+			  
 			    
 			    //재계산
 			    reCalc: function(){
@@ -466,13 +520,38 @@ function countDown(count,seq){
 			                var price = item.parentElement.parentElement.previousElementSibling.firstElementChild.getAttribute('value');
 			                this.totalPrice += count * price;
 			            }
-			        }, this); // forEach 2번째 파라메터로 객체를 넘겨서 this 가 객체리터럴을 가리키도록 함. - thisArg
+			        }, this);  //forEach 2번째 파라메터로 객체를 넘겨서 this 가 객체리터럴을 가리키도록 함. - thisArg
 			    },
 			    //화면 업데이트
 			    updateUI: function () {
 			        document.querySelector('#sum_p_num').textContent = '상품갯수: ' + this.totalCount.formatNumber() + '개';
 			        document.querySelector('#sum_p_price').textContent = '합계금액: ' + this.totalPrice.formatNumber() + '원';
 			    },
+			  	//개별 수량 변경
+			    changePNum: function (pos) {
+			    	var num = pos;
+			    	//console.log("num>>>>"+num);
+			        var item = document.querySelector('input[name=p_num'+pos+']');
+			        var p_num = parseInt(item.getAttribute('value'));
+			        //console.log("p_num>>>"+p_num);
+			        var newval = event.target.classList.contains('up') ? p_num+1 : event.target.classList.contains('down') ? p_num-1 : event.target.value;
+			        
+			        if (parseInt(newval) < 1 || parseInt(newval) > 99) { return false; }
+
+			        item.setAttribute('value', newval);
+			        item.value = newval;
+			        //console.log("newval>>"+newval);
+			        
+			        var price = $('input[id=p_price'+pos+']').val();
+			        //console.log("price>>>"+price);
+			        item.parentElement.parentElement.nextElementSibling.textContent = (newval * price).formatNumber()+"원";
+			        //AJAX 업데이트 전송
+
+			        //전송 처리 결과가 성공이면    
+			        this.reCalc();
+			        this.updateUI();
+			    },
+			    
 			    
 			    checkItem: function () {
 			        this.reCalc();

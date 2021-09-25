@@ -27,17 +27,25 @@
 		<tiles:insertAttribute name="top_info" />
 		<tiles:insertAttribute name="top_menu"  />
 	</div>
-	</div>
+
 	
-	<div id="content_wrap" style="width: 100%;">
+	<div id="middle_wrap">
+		<div id="sidebar_wrap" >
+			<tiles:insertAttribute name="left_menu" />
+			
+		</div>
+	
+	<div id="content_wrap" style="width: 80%;">
 		<tiles:insertAttribute name="main" />
 		<a class="goTop" href="#" ><img src="./image/up2.png" style="width: 200px;height: 200px"></a>
 	</div>		
+</div>
+
 	
 	<div id="footer_wrap">
 		<tiles:insertAttribute name="footer" />
 </div>	 
-
+</div>
 
 <script type="text/javascript">
 $(document).ready(function () {
