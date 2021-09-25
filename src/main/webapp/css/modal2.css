@@ -12,7 +12,11 @@ left: 60%;
 transform: translate(-50%, -50%);
 transform-origin: 50% 50%;
 width: 50%; 
+<<<<<<< HEAD
 height: 60%;
+=======
+height: 40%;
+>>>>>>> master
 display: none;
 justify-content: center;
 align-items: center;
@@ -27,7 +31,11 @@ z-index: 10000000000000000;
 }
 .modal__content {
   width: 60%;
+<<<<<<< HEAD
   height: 60%;
+=======
+  height: auto;
+>>>>>>> master
   background-color:white;
   /* text-align: center; */
   padding: 50px 50px;
