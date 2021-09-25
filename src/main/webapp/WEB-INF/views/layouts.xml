@@ -29,89 +29,129 @@
 </definition>
 
 
-<definition name="info.tiles" template="/WEB-INF/views/mypage/info.jsp">
-</definition>
 
-<definition name="mypage_main.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="mypage_main.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/mypage_main.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
 
-<definition name="info.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="info.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/info.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="info_update.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="info_update.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/info_update.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="pwd_update.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="pwd_update.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/pwd_update.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="info_del.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="info_del.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/info_del.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="mycc.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="mycc.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/mycc.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="managing_cc.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="managing_cc.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/managing_cc.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
 
-<definition name="myrecipe.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="myrecipe.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/myrecipe.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="like_recipe.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+<definition name="like_recipe.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
 	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
 	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
 	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
 	<put-attribute name="main" value="/WEB-INF/views/mypage/like_recipe.jsp"/>
 	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
 
+<definition name="order.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
+	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
+	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
+	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/mypage/mypage_leftmenu.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/mypage/order.jsp"/>
+	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
+</definition>
 
-<!-- 남규 타일즈 -->
+
+
+
+<!-- 남규 타일즈 -->  
+<!-- Admin -->
+<definition name="adminlogin.tiles" template="/WEB-INF/views/admin/adminlogin.jsp">
+</definition>
+
+<definition name="sellchart.tiles" template="/WEB-INF/views/admin/sellchart.jsp">
+</definition>
+
+<definition name="allmemlist.tiles" template="/WEB-INF/views/admin/allmemlist.jsp">
+</definition>
+
+<definition name="allrecipelist.tiles" template="/WEB-INF/views/admin/allrecipelist.jsp">
+</definition>
+<definition name="allclasslist.tiles" template="/WEB-INF/views/admin/allclasslist.jsp">
+</definition>
+<definition name="allmarketlist.tiles" template="/WEB-INF/views/admin/allmarketlist.jsp">
+</definition>
+
+
+<!-- Admin_END -->
+
+
+<!-- 
 <definition name="cslist.tiles" extends="home.tiles">
 	<put-attribute name="main" value="/WEB-INF/views/cs/cslist.jsp" />
-</definition>
+</definition> -->
 
 <definition name="cswrite.tiles" extends="home.tiles">
 	<put-attribute name="main" value="/WEB-INF/views/cs/cswrite.jsp" />
@@ -129,27 +169,20 @@
 	<put-attribute name="main" value="/WEB-INF/views/cs/csreply.jsp"/>
 </definition>
 
-<definition name="allmemlist.tiles" extends="home.tiles">
-	<put-attribute name="main" value="/WEB-INF/views/admin/allmemlist.jsp"/>
+
+<definition name="cslist.tiles" template="/WEB-INF/views/layouts-leftmenutiles.jsp">
+	<put-attribute name="header" value="/WEB-INF/views/commons/header.jsp"/>
+	<put-attribute name="top_info" value="/WEB-INF/views/commons/top_info.jsp"/>
+	<put-attribute name="top_menu" value="/WEB-INF/views/commons/top_menu.jsp"/>
+	<put-attribute name="left_menu" value="/WEB-INF/views/cs/cs_leftmenu.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/cs/cslist.jsp"/>
+	<put-attribute name="footer" value="/WEB-INF/views/commons/footer.jsp"/>
 </definition>
 
-<definition name="sellchart.tiles" extends="home.tiles">
-	<put-attribute name="main" value="/WEB-INF/views/admin/sellchart.jsp"/>
-</definition>
 
-<definition name="allrecipelist.tiles" extends="home.tiles">
-	<put-attribute name="main" value="/WEB-INF/views/admin/allrecipelist.jsp"/>
-</definition>
-
-<definition name="allclasslist.tiles" extends="home.tiles">
-	<put-attribute name="main" value="/WEB-INF/views/admin/allclasslist.jsp"/>
-</definition>
-
-<definition name="allmarketlist.tiles" extends="home.tiles">
-	<put-attribute name="main" value="/WEB-INF/views/admin/allmarketlist.jsp"/>
-</definition>
 
 <!-- 남규끝  타일즈 -->
+
 
 <!-- 승준 타일즈 -->
 <definition name="recipelist.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
@@ -245,21 +278,9 @@
 	<put-attribute name="main" value="/WEB-INF/views/mypage/writeReview.jsp" />
 </definition>
 
-<!-- <definition name="newMarketList.tiles" template="/WEB-INF/views/market/newMarketList.jsp" extends="home.tiles"></definition>
-
-<definition name="marketmain.tiles" template="/WEB-INF/views/market/marketmain.jsp" extends="home.tiles"></definition>
-
-<definition name="marketdetail.tiles" template="/WEB-INF/views/market/marketdetail.jsp" extends="home.tiles"></definition>
-
-<definition name="marketwrite.tiles" template="/WEB-INF/views/market/marketwrite.jsp" extends="home.tiles"></definition>
-
-<definition name="getSearchList.tiles" template="/WEB-INF/views/market/getSearchList.jsp" extends="home.tiles"></definition>
-
-<definition name="getCartList.tiles" template="/WEB-INF/views/market/cart.jsp" extends="home.tiles"></definition>
-
-<definition name="order.tiles" template="/WEB-INF/views/mypage/order.jsp" extends="home.tiles"></definition>
-
-<definition name="writeReview.tiles" template="/WEB-INF/views/mypage/writeReview.jsp" extends="home.tiles"></definition>  -->
+<definition name="bestMarketList.tiles" extends="home.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/market/bestMarketList.jsp" />
+</definition>
 
 <!-- 준희 타일즈 -->
 <definition name="cclist.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
